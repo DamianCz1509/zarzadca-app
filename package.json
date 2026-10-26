@@ -1,0 +1,22 @@
+{
+  "name": "zarzadca-desktop",
+  "private": true,
+  "version": "0.16.0",
+  "type": "module",
+  "scripts": {
+    "web": "node scripts/build-web.mjs",
+    "tauri": "tauri",
+    "build": "tauri build"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0"
+  },
+  "dependencies": {
+    "@fontsource/archivo": "^5.0.0",
+    "@tesseract.js-data/pol": "^1.0.0",
+    "pdfjs-dist": "3.11.174",
+    "pdfmake": "0.2.10",
+    "tesseract.js": "5.1.1",
+    "tesseract.js-core": "5.1.1"
+  }
+}
