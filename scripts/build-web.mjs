@@ -33,10 +33,10 @@ for (const w of [400, 500, 600, 700, 800]) for (const sub of ['latin-ext', 'lati
 }
 fs.writeFileSync(path.join(LIB, 'fonts/archivo.css'), css);
 
-let html = fs.readFileSync(path.join(ROOT, 'app/zarzadca.html'), 'utf8');
+// Windows (GitHub) zapisuje pliki z końcami linii CRLF — ujednolicamy, żeby podmiany zawsze trafiały
+let html = fs.readFileSync(path.join(ROOT, 'app/zarzadca.html'), 'utf8').replace(/\r\n/g, '\n');
 const swap = (from, to) => { if (!html.includes(from)) throw new Error('Nie znaleziono w HTML: ' + from); html = html.split(from).join(to); };
-swap('<link rel="preconnect" href="https://fonts.googleapis.com">\n', '');
-swap('<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n', '');
+html = html.replace(/<link rel="preconnect" href="https:\/\/fonts\.(googleapis|gstatic)\.com"[^>]*>\n?/g, '');
 swap('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap', 'lib/fonts/archivo.css');
 swap('https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js', 'lib/tesseract/tesseract.min.js');
 swap('https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/worker.min.js', 'lib/tesseract/worker.min.js');
