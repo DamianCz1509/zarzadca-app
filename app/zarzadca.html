@@ -973,6 +973,57 @@ html.big #themeBtn.thsw{width:80px;height:40px}html.big #themeBtn .thsw-k{width:
 .pl-poz:hover{background:var(--note)}
 .pl-poz .amt{font-weight:800;white-space:nowrap}
 .pl-poz .amt.k{color:var(--red)} .pl-poz .amt.p{color:var(--green)}
+/* v0.17.1 */
+.pk-user .t{display:flex;flex-direction:column;min-width:0;gap:2px}
+.pk-user .t b{line-height:1.25}
+.pk-user .t .meta{line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (min-width:761px){.app.navcol .navind{right:auto;width:40px}.app.navcol .nav{width:40px}}
+.scs{display:grid;grid-template-columns:1fr;gap:6px}
+.sc{display:grid;grid-template-columns:36px minmax(0,1fr);gap:12px;align-items:center;text-align:left;padding:9px 10px;border-radius:12px;background:var(--note);border:0;color:var(--ink);font:inherit;cursor:pointer;transition:background .26s var(--ease),transform .26s var(--ease)}
+.sc:hover{background:var(--line-soft)}
+.sc:active{transform:scale(.985)}
+.sc .sc-ic{width:36px;height:36px;border-radius:11px;background:var(--paper);display:grid;place-items:center;color:var(--accent);box-shadow:0 0 0 1px var(--line-soft)}
+.sc b{display:block;font-size:14.5px}
+.sc .meta{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl-mon b{min-width:118px}
+.pl-bar .btabs{flex:0 1 420px}
+.pl-where{margin-left:auto}
+.pl-chart{position:relative}
+.plm{cursor:pointer;outline:none}
+.plm .plm-bg{fill:transparent;transition:fill .2s var(--ease)}
+.plm:hover .plm-bg,.plm:focus-visible .plm-bg{fill:var(--line-soft)}
+.plm.on .plm-bg{fill:var(--note);stroke:var(--accent-line);stroke-width:1.5}
+.plm.fut rect:not(.plm-bg){opacity:.4}
+.plv{font-size:10.5px;font-weight:700;fill:var(--slate)}
+.pll{font-size:12px;fill:var(--slate)}
+.plm.on .pll{font-weight:800;fill:var(--ink)}
+.plw{font-size:11px;font-weight:800;fill:var(--green);color:var(--green)}
+.plw.neg{fill:var(--red);color:var(--red)}
+.pl-tip{position:absolute;z-index:3;pointer-events:none;background:var(--paper);border-radius:12px;padding:10px 12px;box-shadow:var(--shadow),0 0 0 1px var(--line);font-size:13px;display:grid;gap:4px;min-width:190px}
+.pl-tip span{display:flex;justify-content:space-between;gap:14px;align-items:center}
+.pl-tip i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px}
+.pl-tip span>b{white-space:nowrap}
+.pl-tip .neg{color:var(--red)}
+.pl-og td{vertical-align:top}
+.pl-sum{display:grid;gap:6px;margin:16px 0 0;max-width:460px;margin-left:auto}
+.pl-sum div{display:flex;justify-content:space-between;gap:16px;padding:4px 2px}
+.pl-sum .tot{border-top:2px solid var(--ink);padding-top:10px;font-size:17px}
+.pl-sum .tot b{color:var(--green)}
+.pl-sum .tot.neg b{color:var(--red)}
+.pl-hours td,.pl-hours th{white-space:nowrap}
+.pl-hours .plh{width:78px;text-align:right;padding:7px 9px;min-height:36px}
+.pl-hours tfoot td{font-weight:600}
+.pl-hours .neg{color:var(--red);font-weight:800}
+.pl-ob{padding:12px 2px;border-top:1px solid var(--line-soft);display:grid;gap:6px}
+.pl-ob:first-of-type{border-top:0}
+.pl-ob-h{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.pl-ob-t{height:12px;border-radius:99px;background:var(--line-soft);display:flex;overflow:hidden}
+.pl-ob-t i{display:block;height:100%;border-radius:99px;transition:width .5s var(--ease)}
+.pl-ob-t i.g{background:var(--green)}
+.pl-ob-t i.a{background:var(--amber)}
+.pl-ob-t i.r{background:var(--red)}
+.pl-ob-t i.over{border-radius:0 99px 99px 0;opacity:.75}
+@media (max-width:760px){.pl-sc{overflow-x:auto;margin:0 -4px;padding:0 4px}.pl-sc svg{min-width:640px}.pl-where{margin-left:0;flex-basis:100%}.pl-sum{max-width:none}}
 </style>
 </head>
 <body>
@@ -980,7 +1031,7 @@ html.big #themeBtn.thsw{width:80px;height:40px}html.big #themeBtn .thsw-k{width:
   <aside class="sb glass" aria-label="Nawigacja">
     <div class="brand">
       <div class="logo" aria-hidden="true"><i></i></div>
-      <span class="wordmark">Zarządca</span><span class="ver">v0.17</span>
+      <span class="wordmark">Zarządca</span><span class="ver">v0.17.1</span>
     </div>
     <button class="ctrig" id="ctrig" type="button" data-act="picker" aria-haspopup="dialog" aria-expanded="false" aria-label="Wybierz wspólnotę"></button>
     <nav class="navscroll" id="nav" aria-label="Moduły">
@@ -1647,49 +1698,63 @@ function vNoClient() {
   <div class="card">${emptyBox('techniczne', 'Zacznij od dodania wspólnoty', 'Wystarczy nazwa i adres — resztę uzupełnisz w modułach.', `<button class="btn pri" type="button" data-act="newW">${ico('plus', 14)}Dodaj wspólnotę</button>`)}</div>`;
 }
 function vPrzeglad(w) {
-  const a = alerts(w.id), vis = isVis;
-  const bud = recs(w.id, 'przeglady_bud').sort(cycSort), serw = recs(w.id, 'przeglady_serw').sort(cycSort), um = recs(w.id, 'umowy').sort(umSort);
-  const uch = recs(w.id, 'uchwaly'), pis = recs(w.id, 'pisma').sort(SORT_DEF.pisma), pr = recs(w.id, 'prace').sort(MOD.prace.sort);
-  const kon = recs(w.id, 'kontakty'), zarz = kon.filter(c => c.kategoria === 'Zarząd wspólnoty'), zq = zapSorted(w.id);
-  const zo = recs(w.id, 'zadania').filter(z => z.status !== 'Zrobione').sort(zSort), pst = polStatus(w.id);
-  const li = (l, r) => `<div class="li"><span>${l}</span>${r}</div>`;
+  const a = alerts(w.id), vis = isVis, t0 = iso(today());
+  const li = (l, r, act = '') => `<div class="li"${act ? ` tabindex="0" role="button" ${act} style="cursor:pointer"` : ''}><span style="min-width:0">${l}</span><span class="li-r">${r}${act ? `<span class="li-go" aria-hidden="true">${ico('chevR', 14)}</span>` : ''}</span></div>`;
+  const ed = (mod, id) => `data-act="edit" data-mod="${mod}" data-id="${esc(id)}"`;
   const none = t => `<div class="none">${esc(t)}</div>`;
-  const chv = `<span class="li-go" aria-hidden="true">${ico('chevR', 14)}</span>`;
-  const cnt = e => uch.filter(u => u.etap === e).length;
-  const lk = lokale(w), nsub = subcontractors(w.id).length;
-  const sub = [w.adres || 'Brak adresu', lk != null ? lk + ' ' + plural(lk, 'lokal', 'lokale', 'lokali') : null, w.powCalkowita ? fmtN(w.powCalkowita, 'm²') : null, w.nip ? 'NIP ' + w.nip : null].filter(Boolean).map(esc).join(' · ');
-  const zab = w.zabezpieczenia || [];
-  const acts = `<button class="btn sec" type="button" data-act="editW">Dane wspólnoty</button>${vis('pisma') ? `<button class="btn sec" type="button" data-act="add" data-mod="pisma">${ico('pisma', 14)}Nowe pismo</button>` : ''}${vis('przeglady') ? addBtn('przeglady_bud', 'Dodaj przegląd') : ''}`;
+  const sub = [w.adres || 'Brak adresu', (() => { const lk = lokale(w); return lk != null ? lk + ' ' + plural(lk, 'lokal', 'lokale', 'lokali') : null; })(), w.nip ? 'NIP ' + w.nip : null].filter(Boolean).map(esc).join(' · ');
+  const acts = `<button class="btn sec" type="button" data-act="editW">Dane wspólnoty</button>`;
   const kp = [
     vis('przeglady') && kpiGo('prz', 'Przeglądy po terminie', a.bud + a.serw, 'budowlane ' + a.bud + ' · serwisowe ' + a.serw, a.bud + a.serw ? 'r' : 'g'),
     vis('umowy') && kpiGo('um', 'Umowy do 90 dni', a.um90, a.umExp ? a.umExp + ' ' + plural(a.umExp, 'wygasła', 'wygasłe', 'wygasłych') : 'kończące się umowy', a.um90 ? 'a' : ''),
     vis('uchwaly') && kpiGo('uch', 'Uchwały do wykonania', a.uchwaly, 'przegłosowane, niewykonane', a.uchwaly ? 'a' : ''),
-    vis('oferty') && kpiGo('oferty', 'Oferty w toku', a.oferty, a.ofLate ? a.ofLate + ' bez odpowiedzi' : 'otwarte zapytania', a.ofLate ? 'a' : ''),
-    vis('pisma') && kpiGo('pisma', 'Pisma do wysłania', a.pisma, 'szkice')
+    vis('pisma') && kpiGo('pisma', 'Pisma do wysłania', a.pisma, 'szkice', a.pisma ? 'a' : '')
   ].filter(Boolean);
+  /* 1. zadania */
+  const zo = recs(w.id, 'zadania').filter(z => z.status !== 'Zrobione').sort(zSort);
+  const cZad = () => zo.length ? zo.slice(0, 5).map(z => { const du = dueInfo(z), ns = nextStep(z); return li(`<b>${esc(z.tytul)}</b>${z.odpowiedzialny ? ` <span class="meta">· ${esc(z.odpowiedzialny)}</span>` : ''}${ns ? `<span class="meta" style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Następny krok: ${esc(ns.typ)}${ns.data ? ' ' + esc(fmtD(ns.data)) : ''}${ns.kto ? ' · ' + esc(ns.kto) : ''}</span>` : ''}`, du ? pill(du.k, du.t) : pill('n', 'bez terminu'), ed('zadania', z.id)); }).join('') + (zo.length > 5 ? `<div class="meta" style="margin-top:8px">i jeszcze ${zo.length - 5}</div>` : '') : none('Brak otwartych zadań');
+  /* 2. nadchodzące przeglądy (budowlane + serwisowe, wg najbliższego terminu) */
+  const pr = [...recs(w.id, 'przeglady_bud').map(r => [r, 'przeglady_bud', short(r.rodzaj)]), ...recs(w.id, 'przeglady_serw').map(r => [r, 'przeglady_serw', r.urzadzenie])]
+    .map(([r, mod, n]) => ({ r, mod, n, c: cyclic(r) })).filter(x => x.c.next).sort((x, y) => x.c.next - y.c.next);
+  const cPrz = () => pr.length ? pr.slice(0, 5).map(x => li(`<b>${esc(x.n || '—')}</b> <span class="meta">· ${x.mod === 'przeglady_bud' ? 'budowlany' : 'serwisowy'} · ${esc(fmtD(x.c.next))}</span>`, pill(x.c.k, x.c.t), ed(x.mod, x.r.id))).join('') : none('Brak przeglądów z datą — dodaj kontrolę roczną i pięcioletnią');
+  /* 3. zebrania i uchwały do wykonania */
+  const uch = recs(w.id, 'uchwaly'), zeb = uch.filter(u => u.rodzaj === 'Zebranie' && u.data && u.data >= t0).sort((x, y) => x.data.localeCompare(y.data)), dw = uch.filter(u => u.etap === 'Przegłosowana');
+  const cZeb = () => (zeb.length ? zeb.slice(0, 3).map(u => li(`<b>${esc(u.tytul)}</b> <span class="meta">· ${esc(fmtD(u.data))}</span>`, pill(daysTo(parseD(u.data)) <= 14 ? 'a' : 'g', daysTo(parseD(u.data)) === 0 ? 'Dziś' : 'Za ' + dni(daysTo(parseD(u.data)))), ed('uchwaly', u.id))).join('') : none('Brak zaplanowanych zebrań'))
+    + (dw.length ? `<div class="eye" style="margin:12px 0 4px">Uchwały do wykonania</div>` + dw.slice(0, 3).map(u => li(esc((u.numer ? u.numer + ' · ' : '') + u.tytul), pill('a', 'Do wykonania'), ed('uchwaly', u.id))).join('') : '');
+  /* 4. oferty w toku */
+  const oq = zapSorted(w.id).filter(q => q.status !== 'Zakończone');
+  const cOf = () => oq.length ? oq.slice(0, 4).map(q => { const st = qStats(q); return li(`<b>${esc(q.kategoria)}</b> <span class="meta">· ${st.resp}/${st.n} odp.${st.min != null ? ' · najniższa ' + esc(fmtZl(st.min)) : ''}</span>`, st.chosen ? pill('g', 'Wybrano') : st.late ? pill('a', st.late + ' bez odp.') : pill('n', 'W toku'), `data-act="sumQ" data-id="${esc(q.id)}"`); }).join('') : none('Brak otwartych zapytań ofertowych');
+  /* 5. kontakty — zarząd */
+  const kon = recs(w.id, 'kontakty'), zarz = kon.filter(c => c.kategoria === 'Zarząd wspólnoty');
+  const cKon = () => (zarz.length ? zarz.slice(0, 4).map(c => `<div class="li"><span style="min-width:0"><b>${esc(c.imie)}</b> <span class="meta">${esc(c.rola || '')}</span></span><span class="li-r">${c.telefon ? `<a class="lnk" href="tel:${esc(String(c.telefon).replace(/\s/g, ''))}">${esc(fmtTel(c.telefon))}</a>` : c.email ? `<a class="lnk" href="mailto:${esc(c.email)}">${esc(c.email)}</a>` : '<span class="meta">brak telefonu</span>'}</span></div>`).join('') : none('Nie dodano członków zarządu')) + `<div class="meta" style="margin-top:10px">${kon.length} ${plural(kon.length, 'kontakt', 'kontakty', 'kontaktów')} w tej wspólnocie</div>`;
+  /* 6. korespondencja — status */
+  const pis = recs(w.id, 'pisma'), szk = pis.filter(p => p.status !== 'Wysłane').sort(SORT_DEF.pisma), wys = pis.filter(p => p.status === 'Wysłane').sort(SORT_DEF.pisma);
+  const cPis = () => (pis.length ? [...szk.slice(0, 3), ...wys.slice(0, Math.max(1, 4 - Math.min(3, szk.length)))].map(p => li(`<b>${esc(p.adresat || '—')}</b> <span class="meta">· ${esc(p.temat || '')}${p.data ? ' · ' + esc(fmtD(p.data)) : ''}</span>`, pill(p.status === 'Wysłane' ? 'g' : 'a', p.status === 'Wysłane' ? 'Wysłane' : 'Do wysłania'), ed('pisma', p.id))).join('') : none('Brak pism'))
+    + `<div class="quick" style="margin-top:12px">${['PINB', 'Zarząd wspólnoty', 'Właściciel lokalu'].map(t => `<button class="qchip" type="button" data-act="newLetter" data-to="${esc(t)}">+ ${esc(t)}</button>`).join('')}</div>`;
+  /* 7. raporty i skróty */
+  const ofRep = oq.filter(q => qStats(q).rec.length);
+  const sc = (act, icn, t, m, extra = '') => `<button class="sc" type="button" data-act="${act}"${extra}><span class="sc-ic">${ico(icn, 18)}</span><span><b>${esc(t)}</b><span class="meta">${esc(m)}</span></span></button>`;
+  const shortcuts = [
+    vis('przeglady') && sc('sumRep', 'przeglady_bud', 'Raport z przeglądów', 'PDF za wybrany okres'),
+    sc('pdf', 'pdf', 'Raport dla ubezpieczyciela', 'dane techniczne, polisa, prace'),
+    vis('oferty') && ofRep.length && sc('sumOfPdf', 'oferty', 'Porównanie ofert', ofRep[0].kategoria + (ofRep.length > 1 ? ' i ' + (ofRep.length - 1) + ' inne' : ''), ` data-id="${esc(ofRep[0].id)}"`),
+    vis('zadania') && sc('add', 'plus', 'Nowe zadanie', 'zgłoszenie, usterka, sprawa', ' data-mod="zadania"'),
+    vis('pisma') && sc('add', 'pisma', 'Nowe pismo', 'z szablonu, gotowe do druku', ' data-mod="pisma"'),
+    vis('przeglady') && sc('add', 'terminy', 'Dodaj przegląd', 'kontrola budowlana', ' data-mod="przeglady_bud"')
+  ].filter(Boolean);
+  const more = v => openLink(v);
   const cards = [
-    ['zadania', 's8', 'Do zrobienia', `<span style="display:flex;gap:16px;align-items:baseline"><button class="lnk" type="button" data-act="add" data-mod="zadania">+ Dodaj</button>${openLink('zadania')}</span>`,
-      () => zo.length ? zo.slice(0, 4).map(z => { const du = dueInfo(z), ns = nextStep(z); return `<div class="li" tabindex="0" data-act="edit" data-mod="zadania" data-id="${esc(z.id)}" style="cursor:pointer"><span><b>${esc(z.tytul)}</b>${z.odpowiedzialny ? ` <span class="meta">· ${esc(z.odpowiedzialny)}</span>` : ''}${ns ? `<span class="meta" style="display:block;overflow:hidden;text-overflow:ellipsis">Następny krok: ${esc(ns.typ)}${ns.data ? ' ' + esc(fmtD(ns.data)) : ''}${ns.kto ? ' · ' + esc(ns.kto) : ''}</span>` : ''}</span><span class="li-r">${du ? pill(du.k, du.t) : pill('n', 'bez terminu')}${chv}</span></div>`; }).join('') : none('Brak otwartych zadań')],
-    ['kontakty', 's4', 'Kontakty', openLink('kontakty'),
-      () => `<div class="eye" style="margin-bottom:6px">Zarząd wspólnoty</div>${zarz.length ? zarz.slice(0, 3).map(c => li(`<b>${esc(c.imie)}</b> <span class="meta">${esc(c.rola || '')}</span>`, `<span class="meta">${esc(c.telefon || c.email || '')}</span>`)).join('') : none('Nie dodano członków zarządu')}<div class="meta" style="margin-top:10px">${kon.length} ${plural(kon.length, 'kontakt', 'kontakty', 'kontaktów')} · ${nsub} ${plural(nsub, 'podwykonawca z umów', 'podwykonawców z umów', 'podwykonawców z umów')}</div>`],
-    ['techniczne', 's4', 'Dane techniczne', openLink('techniczne'),
-      () => `<div class="tiles" style="margin-bottom:12px"><div class="tile"><div class="eye">Rok budowy</div><b>${esc(w.rokBudowy || '—')}</b></div><div class="tile"><div class="eye">Pow. całkowita</div><b>${fmtN(w.powCalkowita, 'm²')}</b></div><div class="tile"><div class="eye">Lokale mieszk. / użytk.</div><b>${fmtN(w.lokaleMieszkalne)} / ${fmtN(w.lokaleUzytkowe)}</b></div><div class="tile"><div class="eye">Konstrukcja</div><b>${esc(w.konstrukcja || '—')}</b></div></div>${li('Ubezpieczenie' + (pst.cur ? ' · ' + esc(pst.cur.tu) : ''), pill(pst.k, pst.t))}${pr[0] ? li(`<b>${esc(pr[0].element)}</b> <span class="meta">${esc(fmtD(pr[0].data))}</span>`, pr[0].ubezp === 'Do zgłoszenia ubezpieczycielowi' ? pill('a', 'Zgłosić ubezpieczycielowi') : '') : none('Brak notatek o pracach')}${zab.length ? `<div class="minitags">${zab.slice(0, 4).map(z => pill('n', z)).join('')}${zab.length > 4 ? pill('n', '+' + (zab.length - 4)) : ''}</div>` : ''}`],
-    ['przeglady', 's4', 'Przeglądy budowlane', openLink('przeglady_bud'),
-      () => bud.length ? bud.slice(0, 4).map(r => { const c = cyclic(r); return li(esc(short(r.rodzaj)), pill(c.k, c.t)); }).join('') : none('Brak przeglądów — dodaj kontrolę roczną i pięcioletnią')],
-    ['przeglady', 's4', 'Przeglądy serwisowe', openLink('przeglady_serw'),
-      () => serw.length ? serw.slice(0, 4).map(r => { const c = cyclic(r); return li(esc(r.urzadzenie), pill(c.k, c.t)); }).join('') : none('Brak urządzeń')],
-    ['umowy', 's8', 'Umowy z kontrahentami', openLink('umowy'),
-      () => um.length ? `<div class="tw"><table class="tbl"><thead><tr><th>Kontrahent</th><th>Osoba kontaktowa</th><th>Zakres</th><th>Status</th><th class="go" aria-hidden="true"></th></tr></thead><tbody>${um.slice(0, 4).map(r => { const c = contract(r), p = person(r); return `<tr tabindex="0" data-act="edit" data-mod="umowy" data-id="${esc(r.id)}"><td><b>${esc(kname(r))}</b></td><td>${p ? esc(p.imie) + `<div class="meta">${esc(p.telefon || p.email || '')}</div>` : '<span class="meta">brak</span>'}</td><td class="wrap">${esc(r.zakres)}</td><td>${pill(c.k, c.t)}</td><td class="go" aria-hidden="true">${ico('chevR', 16)}</td></tr>`; }).join('')}</tbody></table></div>` : none('Brak umów')],
-    ['oferty', 's4', 'Oferty', openLink('oferty'),
-      () => zq.length ? zq.slice(0, 4).map(q => { const st = qStats(q); return li(esc(q.kategoria), st.chosen ? pill('g', 'Wybrano: ' + st.chosen.oferent) : `<span class="meta">${st.resp}/${st.n} odp.${st.min != null ? ' · od ' + fmtZl(st.min) : ''}</span>`); }).join('') : none('Brak zapytań ofertowych')],
-    ['uchwaly', 's6', 'Uchwały i zebrania', openLink('uchwaly'),
-      () => `<div class="tiles t3" style="margin-bottom:12px"><div class="tile"><div class="eye">Przygot.</div><b>${cnt('Przygotowana')}</b></div><div class="tile"><div class="eye">Wysłane</div><b>${cnt('Wysłana do właścicieli')}</b></div><div class="tile"><div class="eye">Przegłos.</div><b style="color:var(--green)">${cnt('Przegłosowana') + cnt('Wykonana')}</b></div></div>${uch.length ? uch.sort(SORT_DEF.uchwaly).slice(0, 2).map(u => li(esc((u.numer ? u.numer + ' · ' : '') + u.tytul), pill(ETAP_K[u.etap] || 'n', u.etap || '—'))).join('') : none('Brak uchwał')}`],
-    ['pisma', 's6', 'Korespondencja', openLink('pisma'),
-      () => `${pis.length ? pis.slice(0, 3).map(p => li(esc(p.adresat + ' — ' + p.temat), pill(p.status === 'Wysłane' ? 'g' : 'a', p.status || 'Szkic'))).join('') : none('Brak pism')}<div class="quick" style="margin-top:12px">${['PINB', 'Policja', 'Straż pożarna', 'Właściciel lokalu', 'Zarząd wspólnoty'].map(t => `<button class="qchip" type="button" data-act="newLetter" data-to="${esc(t)}">+ ${esc(t)}</button>`).join('')}</div>`]
-  ].filter(c => vis(c[0]));
+    ['zadania', 's8', 'Do zrobienia', `<span style="display:flex;gap:16px;align-items:baseline"><button class="lnk" type="button" data-act="add" data-mod="zadania">+ Dodaj</button>${more('zadania')}</span>`, cZad],
+    ['_', 's4', 'Raporty i skróty', '', () => `<div class="scs">${shortcuts.join('')}</div>`],
+    ['przeglady', 's6', 'Nadchodzące przeglądy', more('przeglady_bud'), cPrz],
+    ['uchwaly', 's6', 'Nadchodzące zebrania', more('uchwaly'), cZeb],
+    ['oferty', 's4', 'Oferty w toku', more('oferty'), cOf],
+    ['pisma', 's4', 'Korespondencja', more('pisma'), cPis],
+    ['kontakty', 's4', 'Kontakty — zarząd wspólnoty', more('kontakty'), cKon]
+  ].filter(c => c[0] === '_' || vis(c[0]));
   return head('Podsumowanie wspólnoty', w.nazwa || 'Bez nazwy', sub, acts)
     + (kp.length ? `<div class="kpis${kpCls(kp.length)}">${kp.join('')}</div>` : '')
-    + `<div class="grid dense">${cards.map(([, span, title, right, body], i) => `<section class="card ${span}"><div class="ch"><h2><span class="n-ic">${i + 1}</span>${esc(title)}</h2>${right}</div>${body()}</section>`).join('')}</div>`;
+    + `<div class="grid dense">${cards.map(([, span, title, right, body]) => `<section class="card ${span}"><div class="ch"><h2>${esc(title)}</h2>${right}</div>${body()}</section>`).join('')}</div>`;
 }
 function subcontractors(wid, all) {
   const m = new Map();
@@ -2756,6 +2821,7 @@ function renderDrawer(anim) {
   else if (d.type === 'haslo') h = drHaslo();
   else if (d.type === 'plW') h = drPlW();
   else if (d.type === 'plPoz') h = drPlPoz();
+  else if (d.type === 'plEmp') h = drPlEmp();
   else if (d.type === 'zadanie') h = drZadanie((d.id && W((S.C.rekordy.get(d.id) || {}).wid)) || w);
   drawerEl().innerHTML = `<div class="dr-body${anim ? ' ' + anim : ''}">${h}</div>`;
   if (d.type === 'zadanie') zAfter();
@@ -3178,23 +3244,31 @@ async function submitHaslo() {
   AU.me = rec; let rem = false; try { rem = !!localStorage.getItem(LS_SES); } catch (e) {} sesSave(rec, rem); closeDrawer(); toast('Hasło zmienione');
 }
 
-/* ---------- wyniki finansowe P&L (v0.17, tylko właściciel) ---------- */
-const PL = { d: null, ready: false, loading: false, need: false, dir: '', suggest: '', err: '', y: new Date().getFullYear(), z: 'ytd' };
+/* ---------- wyniki finansowe P&L (v0.17.1, tylko właściciel) ---------- */
+const PL = { d: null, ready: false, loading: false, need: false, dir: '', suggest: '', err: '', y: today().getFullYear(), m: today().getMonth() + 1, z: 'm', tab: 'wyn' };
 const LS_PNL = 'zarzadca-pnl-v1';
-const plEmpty = () => ({ v: 1, stawki: {}, koniec: {}, pozycje: [] });
 const MIESN = ['styczeń', 'luty', 'marzec', 'kwiecień', 'maj', 'czerwiec', 'lipiec', 'sierpień', 'wrzesień', 'październik', 'listopad', 'grudzień'];
 const MIES3 = ['sty', 'lut', 'mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', 'paź', 'lis', 'gru'];
 const ymk = (y, m) => y + '-' + String(m).padStart(2, '0');
-const PL_KAT = { koszt: ['Naprawa / serwis', 'Materiały', 'Dojazdy', 'Wynagrodzenia', 'Biuro', 'Ubezpieczenie', 'Inne'], przychod: ['Dodatkowe zlecenie', 'Prowizja', 'Wynagrodzenie dodatkowe', 'Inne'] };
+const PL_TYP = { podwykonawca: 'Koszt podwykonawcy', inny: 'Inny koszt', przychod: 'Przychód' };
+const PL_KAT = ['Naprawa / serwis', 'Materiały', 'Dojazdy', 'Biuro', 'Oprogramowanie', 'Ubezpieczenie', 'Dodatkowe zlecenie', 'Inne'];
+const PL_STAN = ['Zarządca', 'Administrator', 'Księgowa', 'Asystent/ka', 'Konserwator'];
+function plMigrate(d) {
+  d = d && typeof d === 'object' ? d : {};
+  d.v = 2; d.stawki = d.stawki || {}; d.koniec = d.koniec || {}; d.pozycje = Array.isArray(d.pozycje) ? d.pozycje : [];
+  d.pracownicy = Array.isArray(d.pracownicy) ? d.pracownicy : []; d.godziny = d.godziny && typeof d.godziny === 'object' ? d.godziny : {};
+  for (const L of Object.values(d.stawki)) for (const r of L || []) if (r.stale == null && r.ksiegowosc != null) { r.stale = r.ksiegowosc; delete r.ksiegowosc; }
+  for (const p of d.pozycje) if (p.typ === 'koszt') p.typ = 'inny';
+  return d;
+}
 async function plLoad() {
   if (PL.loading) return; PL.loading = true; PL.err = '';
   try {
     if (TAURI && DF.on) {
       const c = await T.inv('cfg_get'); PL.dir = c.pnl || ''; PL.suggest = c.pnl_suggest || '';
       if (!PL.dir) { PL.need = true; PL.d = null; }
-      else { PL.need = false; const t = await T.inv('pnl_read'); PL.d = t ? JSON.parse(t) : plEmpty(); }
-    } else PL.d = lsGet(LS_PNL) || plEmpty();
-    if (PL.d) { PL.d.stawki = PL.d.stawki || {}; PL.d.koniec = PL.d.koniec || {}; PL.d.pozycje = Array.isArray(PL.d.pozycje) ? PL.d.pozycje : []; }
+      else { PL.need = false; const t = await T.inv('pnl_read'); PL.d = plMigrate(t ? JSON.parse(t) : null); }
+    } else PL.d = plMigrate(lsGet(LS_PNL));
   } catch (e) { PL.err = String((e && e.message) || e); PL.d = null; }
   PL.ready = true; PL.loading = false;
 }
@@ -3203,53 +3277,94 @@ async function plSave() {
   try { if (TAURI && DF.on) await T.inv('pnl_write', { text: JSON.stringify(PL.d), day: iso(today()) }); else if (!lsSet(LS_PNL, PL.d)) throw new Error('brak miejsca w przeglądarce'); return true; }
   catch (e) { toast('Nie zapisano danych finansowych: ' + ((e && e.message) || e)); return false; }
 }
-function plRate(wid, k) {
-  const end = PL.d.koniec[wid]; if (end && k > end) return null;
-  let best = null; for (const r of PL.d.stawki[wid] || []) if (r.od && r.od <= k && (!best || r.od > best.od)) best = r;
-  return best;
+async function plDirSet(p) {
+  if (!p) return;
+  try { await T.inv('cfg_set_pnl', { path: p }); } catch (e) { toast(String(e)); return; }
+  PL.ready = false; render(); toast('Dane finansowe zapisują się w: ' + p);
 }
-function plUpto(y) { const t = today(), cy = t.getFullYear(); return PL.z === 'ytd' && y === cy ? t.getMonth() + 1 : y > cy && PL.z === 'ytd' ? 0 : 12; }
-function plCalc(y) {
-  const upto = plUpto(y), mon = Array.from({ length: 12 }, () => ({ P: 0, C: 0 }));
-  const blank = () => ({ P: 0, X: 0, K: 0, I: 0 });
-  const rows = sortedW().map(w => {
-    const r = Object.assign({ w, rate: null }, blank());
-    for (let m = 1; m <= 12; m++) {
-      const rt = plRate(w.id, ymk(y, m)); if (!rt) continue;
-      const p = num(rt.przychod) || 0, k = num(rt.ksiegowosc) || 0;
-      mon[m - 1].P += p; mon[m - 1].C += k;
-      if (m <= upto) { r.P += p; r.K += k; }
+
+/* dni robocze: pon–pt bez świąt ustawowych (z Wigilią od 2025) */
+function easter(y) { const a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451), n = h + l - 7 * m + 114; return new Date(y, Math.floor(n / 31) - 1, (n % 31) + 1); }
+const WD_C = {};
+function workdays(y, m) {
+  const key = y + '-' + m; if (WD_C[key] != null) return WD_C[key];
+  const e = easter(y), plus = n => { const x = new Date(e); x.setDate(x.getDate() + n); return (x.getMonth() + 1) + '-' + x.getDate(); };
+  const hol = new Set(['1-1', '1-6', '5-1', '5-3', '8-15', '11-1', '11-11', '12-25', '12-26', plus(1), plus(60)]); if (y >= 2025) hol.add('12-24');
+  let n = 0; const days = new Date(y, m, 0).getDate();
+  for (let d = 1; d <= days; d++) { const dw = new Date(y, m - 1, d).getDay(); if (dw !== 0 && dw !== 6 && !hol.has(m + '-' + d)) n++; }
+  return (WD_C[key] = n);
+}
+function plRate(wid, k) { const end = PL.d.koniec[wid]; if (end && k > end) return null; let b = null; for (const r of PL.d.stawki[wid] || []) if (r.od && r.od <= k && (!b || r.od > b.od)) b = r; return b; }
+function plEmpRec(e, k) { if (e.koniec && k > e.koniec) return null; let b = null; for (const r of e.koszt || []) if (r.od && r.od <= k && (!b || r.od > b.od)) b = r; return b; }
+function plCap(e, y, m) { const r = plEmpRec(e, ymk(y, m)); return r ? workdays(y, m) * 8 * ((num(r.etat) ?? 40) / 40) : 0; }
+const plMonths = () => PL.z === 'm' ? [PL.m] : Array.from({ length: PL.m }, (_, i) => i + 1);
+const plOkres = () => PL.z === 'm' ? MIESN[PL.m - 1] + ' ' + PL.y : (PL.m === 1 ? 'styczeń ' : 'styczeń – ' + MIESN[PL.m - 1] + ' ') + PL.y;
+/* rachunek: przychody − koszty bezpośrednie wspólnoty = marża brutto; − koszty ogólne = wynik spółki */
+function plCalc(y, months) {
+  const ws = sortedW(), byW = new Map(ws.map(w => [w.id, { w, P: 0, X: 0, S: 0, PW: 0, WY: 0, IN: 0, H: 0 }]));
+  const O = { WN: 0, PW: 0, IN: 0, PO: 0 }, emps = new Map(), set = new Set(months);
+  for (const m of months) {
+    const k = ymk(y, m), G = PL.d.godziny[k] || {};
+    for (const w of ws) { const rt = plRate(w.id, k); if (!rt) continue; const r = byW.get(w.id); r.P += num(rt.przychod) || 0; r.S += num(rt.stale) || 0; }
+    for (const e of PL.d.pracownicy) {
+      const rec = plEmpRec(e, k), cost = rec ? num(rec.kwota) || 0 : 0, cap = rec ? plCap(e, y, m) : 0, hrs = G[e.id] || {};
+      let H = 0; for (const [wid, h] of Object.entries(hrs)) if (byW.has(wid)) H += num(h) || 0;
+      const st = emps.get(e.id) || { e, cap: 0, H: 0, cost: 0, WN: 0, perW: {} }; emps.set(e.id, st);
+      st.cap += cap; st.H += H; st.cost += cost;
+      const den = Math.max(cap, H) || 1; let alloc = 0;
+      for (const [wid, h] of Object.entries(hrs)) { const r = byW.get(wid), hv = num(h) || 0; if (!r || !hv) continue; const v = cost * hv / den; r.WY += v; r.H += hv; alloc += v; st.perW[wid] = (st.perW[wid] || 0) + hv; }
+      const un = Math.max(0, cost - alloc); st.WN += un; O.WN += un;
     }
-    r.rate = plRate(w.id, ymk(y, Math.max(1, upto || 12)));
-    return r;
-  });
-  const by = new Map(rows.map(r => [r.w.id, r])), firm = blank(), items = [];
-  for (const p of PL.d.pozycje) {
-    if (!p.data || p.data.slice(0, 4) !== String(y)) continue;
-    const m = +p.data.slice(5, 7), v = num(p.kwota) || 0, row = by.get(p.wid) || firm;
-    if (p.typ === 'przychod') mon[m - 1].P += v; else mon[m - 1].C += v;
-    if (m > upto) continue;
-    items.push(p);
-    if (p.typ === 'przychod') { row.P += v; row.X += v; } else row.I += v;
   }
-  rows.forEach(r => { r.M = r.P - r.K - r.I; });
-  firm.M = firm.P - firm.K - firm.I;
-  const tot = blank(); [...rows, firm].forEach(r => { tot.P += r.P; tot.X += r.X; tot.K += r.K; tot.I += r.I; }); tot.M = tot.P - tot.K - tot.I;
-  return { rows, firm, tot, mon, upto, items: items.sort((a, b) => b.data.localeCompare(a.data)) };
+  for (const p of PL.d.pozycje) {
+    if (!p.data || +p.data.slice(0, 4) !== y || !set.has(+p.data.slice(5, 7))) continue;
+    const v = num(p.kwota) || 0, r = byW.get(p.wid);
+    if (p.typ === 'przychod') { if (r) { r.P += v; r.X += v; } else O.PO += v; }
+    else if (p.typ === 'podwykonawca') { if (r) r.PW += v; else O.PW += v; }
+    else { if (r) r.IN += v; else O.IN += v; }
+  }
+  const rows = [...byW.values()].map(r => Object.assign(r, { K: r.S + r.PW + r.WY + r.IN, MB: r.P - r.S - r.PW - r.WY - r.IN }));
+  const T = { P: 0, X: 0, S: 0, PW: 0, WY: 0, IN: 0, K: 0, MB: 0, H: 0 }; rows.forEach(r => { for (const k in T) T[k] += r[k]; });
+  O.T = O.WN + O.PW + O.IN;
+  return { rows, T, O, wynik: T.MB + O.PO - O.T, przych: T.P + O.PO, emps: [...emps.values()].filter(s => s.cap || s.H || s.cost) };
 }
-const zl = v => (v < 0 ? '−' : '') + grp(Math.abs(Math.round(v)), 0) + ' zł';
+const zl = v => (v < -0.5 ? '−' : '') + grp(Math.abs(Math.round(v)), 0) + ' zł';
 const pctTxt = (m, p) => p ? (Math.round(m / p * 1000) / 10).toLocaleString('pl-PL') + '%' : '—';
-function plChart(c) {
-  const W = 720, H = 210, pad = 26, bw = 18, max = Math.max(1, ...c.mon.map(x => Math.max(x.P, x.C)));
-  const step = (W - pad * 2) / 12, y = v => H - 28 - (v / max) * (H - 48);
-  const bars = c.mon.map((x, i) => {
-    const cx = pad + step * i + step / 2, f = i + 1 > c.upto ? ' opacity=".35"' : '';
-    return `<g${f}><rect x="${cx - bw - 1}" y="${y(x.P)}" width="${bw}" height="${H - 28 - y(x.P)}" rx="4" fill="var(--green)"><title>${MIESN[i]}: przychody ${zl(x.P)}</title></rect><rect x="${cx + 1}" y="${y(x.C)}" width="${bw}" height="${H - 28 - y(x.C)}" rx="4" fill="var(--amber)"><title>${MIESN[i]}: koszty ${zl(x.C)}</title></rect><text x="${cx}" y="${H - 8}" text-anchor="middle" font-size="12" fill="var(--slate)">${MIES3[i]}</text></g>`;
+const hTxt = v => (Math.round(v * 10) / 10).toLocaleString('pl-PL') + ' h';
+const kTxt = v => Math.abs(v) >= 1000 ? (Math.round(v / 100) / 10).toLocaleString('pl-PL') : String(Math.round(v));
+
+/* wykres: miesiące z liczbami, podpowiedź po najechaniu, kliknięcie wybiera miesiąc */
+function plChart() {
+  const y = PL.y, S12 = Array.from({ length: 12 }, (_, i) => { const c = plCalc(y, [i + 1]); return { P: c.przych, K: c.T.K + c.O.T, W: c.wynik, MB: c.T.MB }; });
+  PL.s12 = S12;
+  const Wd = 760, Hd = 270, top = 26, base = 228, max = Math.max(1, ...S12.map(x => Math.max(x.P, x.K))), step = Wd / 12, bw = 21;
+  const yv = v => base - (Math.max(0, v) / max) * (base - top);
+  const sel = new Set(plMonths()), now = today(), cur = y === now.getFullYear() ? now.getMonth() + 1 : y < now.getFullYear() ? 13 : 0;
+  const g = S12.map((x, i) => {
+    const cx = step * i + step / 2, on = sel.has(i + 1), fut = i + 1 > cur;
+    return `<g class="plm${on ? ' on' : ''}${fut ? ' fut' : ''}" data-act="plMSel" data-m="${i + 1}" tabindex="0" role="button" aria-label="${esc(MIESN[i])}: przychody ${esc(zl(x.P))}, koszty ${esc(zl(x.K))}, wynik ${esc(zl(x.W))}">
+      <rect class="plm-bg" x="${step * i + 2}" y="4" width="${step - 4}" height="${Hd - 8}" rx="10"/>
+      <rect x="${cx - bw - 1.5}" y="${yv(x.P)}" width="${bw}" height="${Math.max(0, base - yv(x.P))}" rx="4" fill="var(--green)"/>
+      <rect x="${cx + 1.5}" y="${yv(x.K)}" width="${bw}" height="${Math.max(0, base - yv(x.K))}" rx="4" fill="var(--amber)"/>
+      ${x.P ? `<text x="${cx - bw / 2 - 1.5}" y="${yv(x.P) - 5}" text-anchor="middle" class="plv">${kTxt(x.P)}</text>` : ''}${x.K ? `<text x="${cx + bw / 2 + 1.5}" y="${yv(x.K) - 5}" text-anchor="middle" class="plv">${kTxt(x.K)}</text>` : ''}
+      <text x="${cx}" y="${base + 18}" text-anchor="middle" class="pll">${MIES3[i]}</text>
+      <text x="${cx}" y="${base + 34}" text-anchor="middle" class="plw${x.W < -0.5 ? ' neg' : ''}">${x.W ? kTxt(x.W) : ''}</text></g>`;
   }).join('');
-  return `<div class="pl-chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Przychody i koszty w kolejnych miesiącach"><line x1="${pad}" x2="${W - pad}" y1="${H - 28}" y2="${H - 28}" stroke="var(--line)"/>${bars}</svg><div class="lg"><span><i style="background:var(--green)"></i>Przychody</span><span><i style="background:var(--amber)"></i>Koszty (księgowe + inne)</span>${c.upto < 12 ? '<span class="meta">jaśniej — miesiące, które dopiero nadejdą (wg stawek)</span>' : ''}</div></div>`;
+  return `<div class="pl-chart" id="plChart"><div class="pl-sc"><svg viewBox="0 0 ${Wd} ${Hd}" role="group" aria-label="Przychody, koszty i wynik w kolejnych miesiącach ${y}"><line x1="0" x2="${Wd}" y1="${base}" y2="${base}" stroke="var(--line)"/>${g}</svg></div><div class="pl-tip" id="plTip" hidden></div>
+    <div class="lg"><span><i style="background:var(--green)"></i>Przychody</span><span><i style="background:var(--amber)"></i>Koszty (z kosztami ogólnymi)</span><span><b class="plw">0</b> wynik pod nazwą miesiąca</span><span class="meta">kwoty w tys. zł · kliknij miesiąc, aby go wybrać</span></div></div>`;
 }
+function plTip(g) {
+  const tip = $('#plTip'), box = $('#plChart'); if (!tip || !box || !PL.s12) return;
+  if (!g) { tip.hidden = true; return; }
+  const i = +g.dataset.m - 1, x = PL.s12[i], r = g.getBoundingClientRect(), b = box.getBoundingClientRect();
+  tip.innerHTML = `<b>${esc(MIESN[i])} ${PL.y}</b><span><i style="background:var(--green)"></i>Przychody <b>${zl(x.P)}</b></span><span><i style="background:var(--amber)"></i>Koszty <b>${zl(x.K)}</b></span><span>Marża brutto <b>${zl(x.MB)}</b></span><span>Wynik spółki <b class="${x.W < -0.5 ? 'neg' : ''}">${zl(x.W)}</b></span>`;
+  tip.hidden = false;
+  const tw = tip.offsetWidth, left = Math.max(4, Math.min(b.width - tw - 4, r.left - b.left + r.width / 2 - tw / 2));
+  tip.style.left = left + 'px'; tip.style.top = Math.max(0, r.top - b.top + 8) + 'px';
+}
+
 function vPnl() {
-  const H = (acts = '') => head('Firma', 'Wyniki finansowe (P&L)', 'Przychody i koszty obsługi każdej wspólnoty, marża i wynik całej spółki. Kwoty netto. Widzi tylko właściciel.', acts);
+  const H = (acts = '') => head('Firma', 'Wyniki finansowe (P&L)', 'Przychody, koszty i marża każdej wspólnoty, koszty ogólne i wynik spółki, a także obłożenie pracowników. Kwoty netto. Widzi tylko właściciel.', acts);
   if (!isOwner()) return H() + `<div class="card">${emptyBox('lock', 'Brak dostępu', 'Wyniki finansowe widzi tylko właściciel firmy.')}</div>`;
   if (!PL.ready) { plLoad().then(() => { if (S.view === 'pnl' && !S.dr) render(); }); return H() + `<div class="card"><div class="skel" style="width:60%"></div><div class="skel" style="width:85%"></div></div>`; }
   if (PL.need) return H() + `<div class="card"><div class="ch"><h2>Prywatny folder na dane finansowe</h2></div><p>Wyniki finansowe zapisują się w Twoim <b>prywatnym</b> folderze — nie w folderze danych, który widzą współpracownicy. Dzięki temu zarządca nie ma do nich dostępu nawet poza aplikacją.</p>
@@ -3257,98 +3372,191 @@ function vPnl() {
       <div style="margin-top:12px"><button class="btn sec" type="button" data-act="plDirPick">${ico('folder', 14)}Wybierz inny folder…</button></div>
       <p class="meta" style="margin-top:12px">Nie wybieraj folderu, który udostępniasz innym w OneDrive. Na innym komputerze wskażesz ten sam folder.</p></div>`;
   if (!PL.d) return H() + `<div class="card">${emptyBox('pnl', 'Nie udało się odczytać danych finansowych', PL.err || 'Spróbuj ponownie.', '<button class="btn sec" type="button" data-act="plRetry">Spróbuj ponownie</button>')}</div>`;
-  const y = PL.y, c = plCalc(y), t = c.tot, cy = today().getFullYear();
-  const acts = `<button class="btn sec" type="button" data-act="plCsv">${ico('download', 14)}Eksport do Excela</button><button class="btn pri" type="button" data-act="plPozNew">${ico('plus', 14)}Dodaj koszt lub przychód</button>`;
-  const bar = `<div class="pl-bar"><span class="pl-year"><button class="icb" type="button" data-act="plY" data-d="-1" aria-label="Poprzedni rok">${ico('chevL', 16)}</button><b>${y}</b><button class="icb" type="button" data-act="plY" data-d="1" aria-label="Następny rok">${ico('chevR', 16)}</button></span>${y === cy ? btabs('Zakres', [['ytd', 'check', 'Do dziś', '', ''], ['rok', 'terminy', 'Cały rok', '', '']], PL.z, 'plZ') : ''}<span class="meta">${TAURI && DF.on ? 'Zapis: ' + esc(PL.dir) + ' · <button class="lnk" type="button" data-act="plDirPick">zmień</button>' : 'Zapis: w tej przeglądarce · <button class="lnk" type="button" data-act="plJson">pobierz kopię</button>'}</span></div>`;
-  const okres = c.upto === 12 ? 'cały rok ' + y : c.upto ? 'od stycznia do ' + MIESN[c.upto - 1] + ' ' + y : 'brak miesięcy w zakresie';
-  const kp = `<div class="kpis k4">${kpi('Przychody', zl(t.P), t.X ? 'w tym jednorazowe ' + zl(t.X) : okres)}${kpi('Koszty księgowe', zl(t.K), 'obsługa księgowa wspólnot')}${kpi('Koszty inne', zl(t.I), 'naprawy, dojazdy, koszty firmy')}${kpi('Marża', zl(t.M), pctTxt(t.M, t.P) + ' przychodów', t.M < 0 ? 'r' : 'g')}</div>`;
-  const tr = r => `<tr tabindex="0" data-act="plW" data-id="${esc(r.w.id)}"><td><b>${esc(r.w.nazwa || 'Bez nazwy')}</b>${PL.d.koniec[r.w.id] ? `<div class="meta">obsługa do ${esc(MIESN[+PL.d.koniec[r.w.id].slice(5) - 1])} ${esc(PL.d.koniec[r.w.id].slice(0, 4))}</div>` : ''}</td><td class="r">${r.rate ? zl(num(r.rate.przychod) || 0) : pill('a', 'uzupełnij stawki')}</td><td class="r">${zl(r.P)}</td><td class="r">${zl(r.K)}</td><td class="r">${zl(r.I)}</td><td class="r${r.M < 0 ? ' neg' : ''}"><b>${zl(r.M)}</b></td><td class="r${r.M < 0 ? ' neg' : ''}">${pctTxt(r.M, r.P)}</td><td class="go" aria-hidden="true">${ico('chevR', 16)}</td></tr>`;
-  const firmRow = (c.firm.P || c.firm.I) ? `<tr class="sub"><td>Firma — koszty i przychody ogólne</td><td class="r">—</td><td class="r">${zl(c.firm.P)}</td><td class="r">—</td><td class="r">${zl(c.firm.I)}</td><td class="r${c.firm.M < 0 ? ' neg' : ''}">${zl(c.firm.M)}</td><td class="r"></td><td></td></tr>` : '';
-  const table = `<div class="tw"><table class="tbl"><thead><tr><th>Wspólnota</th><th class="r">Opłata / mies.</th><th class="r">Przychody</th><th class="r">Koszty księgowe</th><th class="r">Koszty inne</th><th class="r">Marża</th><th class="r">Marża %</th><th class="go" aria-hidden="true"></th></tr></thead><tbody>${c.rows.map(tr).join('')}</tbody><tfoot>${firmRow}<tr><td>Razem spółka</td><td class="r"></td><td class="r">${zl(t.P)}</td><td class="r">${zl(t.K)}</td><td class="r">${zl(t.I)}</td><td class="r${t.M < 0 ? ' neg' : ''}">${zl(t.M)}</td><td class="r${t.M < 0 ? ' neg' : ''}">${pctTxt(t.M, t.P)}</td><td></td></tr></tfoot></table></div>`;
-  const poz = c.items.length ? c.items.slice(0, 30).map(plPozRow).join('') : '<div class="none">Brak pozycji w tym okresie. Dodaj koszt (np. naprawa, dojazdy) albo dodatkowy przychód.</div>';
-  return H(acts) + bar + kp + `<div class="grid"><section class="card s12"><div class="ch"><h2>Wspólnoty</h2><span class="meta">${esc(okres)} · kliknij wspólnotę, aby ustawić opłatę i koszt księgowości</span></div>${c.rows.length ? table : '<div class="none">Najpierw dodaj wspólnoty w Lista wspólnot.</div>'}</section>
-    <section class="card s7"><div class="ch"><h2>Miesiąc po miesiącu</h2><span class="meta">${y}</span></div>${plChart(c)}</section>
-    <section class="card s5"><div class="ch"><h2>Koszty i przychody jednorazowe</h2><span class="meta">${c.items.length}</span></div>${poz}</section></div>`;
+  const acts = `<button class="btn sec" type="button" data-act="plCsv">${ico('download', 14)}Eksport do Excela</button>${PL.tab === 'god' ? `<button class="btn pri" type="button" data-act="plEmpNew">${ico('plus', 14)}Dodaj pracownika</button>` : `<button class="btn pri" type="button" data-act="plPozNew">${ico('plus', 14)}Dodaj koszt lub przychód</button>`}`;
+  const tabs = btabs('Widok', [['wyn', 'pnl', 'Wyniki', '', ''], ['god', 'zadania', 'Pracownicy i godziny', '', ''], ['obl', 'konta', 'Obłożenie pracowników', '', '']], PL.tab, 'plTab');
+  const per = PL.tab === 'god' ? '' : btabs('Okres', [['m', 'terminy', 'Miesiąc', '', ''], ['ytd', 'check', 'Od początku roku', '', '']], PL.z, 'plZ');
+  const bar = `<div class="pl-bar"><span class="pl-year"><button class="icb" type="button" data-act="plY" data-d="-1" aria-label="Poprzedni rok">${ico('chevL', 16)}</button><b>${PL.y}</b><button class="icb" type="button" data-act="plY" data-d="1" aria-label="Następny rok">${ico('chevR', 16)}</button></span><span class="pl-year pl-mon"><button class="icb" type="button" data-act="plM" data-d="-1" aria-label="Poprzedni miesiąc">${ico('chevL', 16)}</button><b>${esc(MIESN[PL.m - 1])}</b><button class="icb" type="button" data-act="plM" data-d="1" aria-label="Następny miesiąc">${ico('chevR', 16)}</button></span>${per}<span class="meta pl-where">${TAURI && DF.on ? 'Zapis: ' + esc(PL.dir) + ' · <button class="lnk" type="button" data-act="plDirPick">zmień</button>' : 'Zapis: w tej przeglądarce · <button class="lnk" type="button" data-act="plJson">pobierz kopię</button>'}</span></div>`;
+  return H(acts) + tabs + bar + (PL.tab === 'god' ? plTabGodziny() : PL.tab === 'obl' ? plTabObl() : plTabWyniki());
+}
+function plTabWyniki() {
+  const c = plCalc(PL.y, plMonths()), t = c.T, o = c.O, okres = plOkres();
+  const kp = `<div class="kpis k4">${kpi('Przychody', zl(c.przych), okres)}${kpi('Marża brutto', zl(t.MB), pctTxt(t.MB, t.P) + ' przychodów wspólnot', t.MB < -0.5 ? 'r' : 'g')}${kpi('Koszty ogólne', zl(o.T), o.WN ? 'w tym nieprzypisane wynagrodzenia ' + zl(o.WN) : 'koszty firmy poza wspólnotami', o.T ? 'a' : '')}${kpi('Wynik spółki', zl(c.wynik), pctTxt(c.wynik, c.przych) + ' przychodów', c.wynik < -0.5 ? 'r' : 'g')}</div>`;
+  const neg = v => v < -0.5 ? ' neg' : '';
+  const tr = r => `<tr tabindex="0" data-act="plW" data-id="${esc(r.w.id)}"><td><b>${esc(r.w.nazwa || 'Bez nazwy')}</b>${!plRate(r.w.id, ymk(PL.y, PL.m)) && !PL.d.koniec[r.w.id] ? `<div>${pill('a', 'uzupełnij opłatę')}</div>` : PL.d.koniec[r.w.id] ? `<div class="meta">obsługa do ${esc(MIESN[+PL.d.koniec[r.w.id].slice(5) - 1])} ${esc(PL.d.koniec[r.w.id].slice(0, 4))}</div>` : ''}</td><td class="r">${zl(r.P)}</td><td class="r">${zl(r.S)}</td><td class="r">${zl(r.PW)}</td><td class="r">${zl(r.WY)}${r.H ? `<div class="meta">${hTxt(r.H)}</div>` : ''}</td><td class="r">${zl(r.IN)}</td><td class="r${neg(r.MB)}"><b>${zl(r.MB)}</b></td><td class="r${neg(r.MB)}">${pctTxt(r.MB, r.P)}</td><td class="go" aria-hidden="true">${ico('chevR', 16)}</td></tr>`;
+  const table = c.rows.length ? `<div class="tw"><table class="tbl"><thead><tr><th>Wspólnota</th><th class="r">Przychody</th><th class="r">Koszty stałe</th><th class="r">Podwykonawcy</th><th class="r">Wynagrodzenia<br><span class="meta">wg godzin</span></th><th class="r">Inne koszty</th><th class="r">Marża brutto</th><th class="r">Marża %</th><th class="go" aria-hidden="true"></th></tr></thead><tbody>${c.rows.map(tr).join('')}</tbody><tfoot><tr><td>Razem wspólnoty</td><td class="r">${zl(t.P)}</td><td class="r">${zl(t.S)}</td><td class="r">${zl(t.PW)}</td><td class="r">${zl(t.WY)}</td><td class="r">${zl(t.IN)}</td><td class="r${neg(t.MB)}">${zl(t.MB)}</td><td class="r${neg(t.MB)}">${pctTxt(t.MB, t.P)}</td><td></td></tr></tfoot></table></div>` : '<div class="none">Najpierw dodaj wspólnoty w Lista wspólnot.</div>';
+  const empRows = c.emps.filter(s => s.WN > 0.5).sort((a, b) => b.WN - a.WN).map(s => `<tr class="sub"><td style="padding-left:26px">${esc(s.e.imie)} <span class="meta">· nieprzypisane ${hTxt(Math.max(0, s.cap - s.H))} z ${hTxt(s.cap)}${s.cap ? ' (' + pctTxt(Math.max(0, s.cap - s.H), s.cap) + ')' : ''}</span></td><td class="r">${zl(s.WN)}</td></tr>`).join('');
+  const og = `<div class="tw"><table class="tbl pl-og"><tbody>
+      <tr><td><b>Wynagrodzenia nieprzypisane do wspólnot</b><div class="meta">godziny pracowników, których nie przypisano żadnej wspólnocie (wymiar etatu − godziny na wspólnotach)</div></td><td class="r"><b>${zl(o.WN)}</b></td></tr>${empRows}
+      <tr><td><b>Podwykonawcy — koszty ogólne firmy</b></td><td class="r"><b>${zl(o.PW)}</b></td></tr>
+      <tr><td><b>Inne koszty ogólne</b><div class="meta">biuro, oprogramowanie, dojazdy itp. nieprzypisane do wspólnoty</div></td><td class="r"><b>${zl(o.IN)}</b></td></tr>
+    </tbody><tfoot><tr><td>Razem koszty ogólne</td><td class="r">${zl(o.T)}</td></tr></tfoot></table></div>
+    <div class="pl-sum"><div><span>Marża brutto wspólnot</span><b>${zl(t.MB)}</b></div><div><span>− Koszty ogólne</span><b>${zl(o.T)}</b></div>${o.PO ? `<div><span>+ Przychody pozostałe</span><b>${zl(o.PO)}</b></div>` : ''}<div class="tot${neg(c.wynik)}"><span>= Wynik spółki</span><b>${zl(c.wynik)}</b></div></div>`;
+  const items = PL.d.pozycje.filter(p => p.data && +p.data.slice(0, 4) === PL.y && plMonths().includes(+p.data.slice(5, 7))).sort((a, b) => b.data.localeCompare(a.data));
+  return kp + `<div class="grid"><section class="card s12"><div class="ch"><h2>Marża brutto wg wspólnot</h2><span class="meta">${esc(okres)} · kliknij wspólnotę, aby ustawić opłatę i koszty stałe</span></div>${table}</section>
+    <section class="card s12"><div class="ch"><h2>Koszty ogólne i wynik spółki</h2><span class="meta">${esc(okres)}</span></div>${og}</section>
+    <section class="card s7"><div class="ch"><h2>Miesiąc po miesiącu</h2><span class="meta">${PL.y}</span></div>${plChart()}</section>
+    <section class="card s5"><div class="ch"><h2>Koszty i przychody jednorazowe</h2><span class="meta">${items.length}</span></div>${items.length ? items.slice(0, 40).map(plPozRow).join('') : '<div class="none">Brak pozycji w tym okresie. Dodaj koszt podwykonawcy, inny koszt albo dodatkowy przychód.</div>'}</section></div>`;
 }
 function plPozRow(p) {
   const w = W(p.wid), k = p.typ !== 'przychod';
-  return `<div class="pl-poz" tabindex="0" role="button" data-act="plPoz" data-id="${esc(p.id)}"><span class="meta">${esc(fmtD(p.data))}</span><span style="min-width:0"><b>${esc(p.kat || (k ? 'Koszt' : 'Przychód'))}</b><span class="meta" style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc([w ? w.nazwa : 'Firma (ogólne)', p.opis].filter(Boolean).join(' · '))}</span></span><span class="amt ${k ? 'k' : 'p'}">${k ? '−' : '+'}${zl(num(p.kwota) || 0)}</span></div>`;
+  const ttl = p.typ === 'podwykonawca' ? (p.kontrahent || PL_TYP.podwykonawca) : (p.kat || PL_TYP[p.typ] || 'Koszt');
+  return `<div class="pl-poz" tabindex="0" role="button" data-act="plPoz" data-id="${esc(p.id)}"><span class="meta">${esc(fmtD(p.data))}</span><span style="min-width:0"><b>${esc(ttl)}</b><span class="meta" style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc([ttl === PL_TYP[p.typ] ? '' : PL_TYP[p.typ], p.typ === 'podwykonawca' ? p.kat : '', w ? w.nazwa : 'Firma — ogólne', p.opis].filter(Boolean).join(' · '))}</span></span><span class="amt ${k ? 'k' : 'p'}">${k ? '−' : '+'}${zl(num(p.kwota) || 0)}</span></div>`;
+}
+function plActiveEmps(y, m) { const k = ymk(y, m); return PL.d.pracownicy.filter(e => plEmpRec(e, k)).sort((a, b) => (a.imie || '').localeCompare(b.imie || '', 'pl')); }
+function plTabGodziny() {
+  const y = PL.y, m = PL.m, k = ymk(y, m), emps = plActiveEmps(y, m), all = PL.d.pracownicy.slice().sort((a, b) => (a.imie || '').localeCompare(b.imie || '', 'pl')), ws = sortedW(), G = PL.d.godziny[k] || {}, wd = workdays(y, m);
+  const list = all.length ? all.map(e => { const r = plEmpRec(e, k); return `<div class="li" tabindex="0" role="button" data-act="plEmp" data-id="${esc(e.id)}" style="cursor:pointer"><span style="display:flex;gap:12px;align-items:center;min-width:0"><span class="av">${esc(initials(e.imie))}</span><span style="min-width:0"><b>${esc(e.imie)}</b><span class="meta" style="display:block">${esc([e.stanowisko, r ? (num(r.etat) ?? 40) + ' h/tydz.' : 'nie pracuje w tym miesiącu'].filter(Boolean).join(' · '))}</span></span></span><span style="display:flex;gap:10px;align-items:center"><b>${r ? zl(num(r.kwota) || 0) : '—'}</b><span class="meta">/ mies.</span>${ico('chevR', 16)}</span></div>`; }).join('') : `<div class="none">Dodaj pracowników opłacanych z kasy spółki (np. zarządców, administratorów) z miesięcznym kosztem wynagrodzenia. Godziny przypiszesz poniżej.</div>`;
+  let grid;
+  if (!emps.length) grid = `<div class="none">W tym miesiącu nie ma aktywnych pracowników — dodaj pracownika albo zmień miesiąc.</div>`;
+  else if (!ws.length) grid = `<div class="none">Najpierw dodaj wspólnoty.</div>`;
+  else {
+    const cell = (e, w) => { const v = ((G[e.id] || {})[w.id]); return `<td class="r"><input class="plh" type="text" inputmode="decimal" data-e="${esc(e.id)}" data-w="${esc(w.id)}" value="${v ? esc(String(v).replace('.', ',')) : ''}" aria-label="${esc(e.imie)} — ${esc(w.nazwa || '')}, godziny" placeholder="0" autocomplete="off"></td>`; };
+    grid = `<form class="wform" id="plHours" novalidate><div class="tw"><table class="tbl pl-hours"><thead><tr><th>Wspólnota</th>${emps.map(e => `<th class="r">${esc(e.imie)}<br><span class="meta">${esc(e.stanowisko || '')}</span></th>`).join('')}</tr></thead>
+      <tbody>${ws.map(w => `<tr><td><b>${esc(w.nazwa || 'Bez nazwy')}</b></td>${emps.map(e => cell(e, w)).join('')}</tr>`).join('')}</tbody>
+      <tfoot><tr><td>Przypisano do wspólnot</td>${emps.map(e => `<td class="r" id="plhS_${esc(e.id)}"></td>`).join('')}</tr>
+      <tr class="sub"><td>Wymiar w miesiącu <span class="meta">(${wd} dni roboczych × 8 h × etat)</span></td>${emps.map(e => `<td class="r">${hTxt(plCap(e, y, m))}</td>`).join('')}</tr>
+      <tr class="sub"><td>Nieprzypisane → koszty ogólne</td>${emps.map(e => `<td class="r" id="plhN_${esc(e.id)}"></td>`).join('')}</tr>
+      <tr class="sub"><td>Obłożenie</td>${emps.map(e => `<td class="r" id="plhO_${esc(e.id)}"></td>`).join('')}</tr></tfoot></table></div>
+      <div class="formfoot"><button class="btn pri" type="submit">Zapisz godziny</button><button class="btn sec" type="button" data-act="plHCopy">Skopiuj z poprzedniego miesiąca</button><span class="sp"></span><span class="meta">Puste pole = 0 h. Koszt wynagrodzenia dzieli się proporcjonalnie do godzin.</span></div></form>`;
+  }
+  queueMicrotask(plHoursFoot);
+  return `<div class="grid"><section class="card s12"><div class="ch"><h2>Godziny pracy — ${esc(MIESN[m - 1])} ${y}</h2><span class="meta">wpisz, ile godzin każdy pracownik poświęcił każdej wspólnocie</span></div>${grid}</section>
+    <section class="card s12"><div class="ch"><h2>Pracownicy opłacani z kasy spółki</h2><span class="meta">${all.length}</span></div>${list}</section></div>`;
+}
+function plHoursFoot() {
+  const f = $('#plHours'); if (!f) return;
+  const y = PL.y, m = PL.m, k = ymk(y, m);
+  for (const e of plActiveEmps(y, m)) {
+    const H = $$('.plh', f).filter(i => i.dataset.e === e.id).reduce((a, i) => a + (parseNum(i.value) > 0 ? parseNum(i.value) : 0), 0), cap = plCap(e, y, m), r = plEmpRec(e, k), cost = r ? num(r.kwota) || 0 : 0;
+    const un = cap > H ? cost * (cap - H) / cap : 0, s = (id, t) => { const el = document.getElementById(id); if (el) el.innerHTML = t; };
+    s('plhS_' + e.id, `<b>${hTxt(H)}</b>`); s('plhN_' + e.id, cap > H ? `${hTxt(cap - H)} · ${zl(un)}` : '—');
+    s('plhO_' + e.id, cap ? `<span class="${H > cap ? 'neg' : ''}">${pctTxt(H, cap)}${H > cap ? ' · nadgodziny' : ''}</span>` : '—');
+  }
+}
+async function savePlHours() {
+  const f = $('#plHours'); if (!f) return;
+  const k = ymk(PL.y, PL.m), out = {}; let bad = null;
+  for (const i of $$('.plh', f)) { const v = i.value.trim(); if (!v) continue; const n = parseNum(v); if (n == null || isNaN(n) || n < 0) { bad = i; continue; } if (n > 0) (out[i.dataset.e] = out[i.dataset.e] || {})[i.dataset.w] = Math.round(n * 100) / 100; }
+  if (bad) { bad.focus(); toast('Wpisz liczbę godzin, np. 12 albo 7,5'); return; }
+  PL.d.godziny[k] = out; if (!Object.keys(out).length) delete PL.d.godziny[k];
+  if (await plSave()) { S.dirty = false; S.dirtyForm = null; render(); toast('Zapisano godziny — ' + MIESN[PL.m - 1]); }
+}
+function plTabObl() {
+  const c = plCalc(PL.y, plMonths()), L = c.emps.filter(s => s.cap > 0).map(s => Object.assign(s, { u: s.H / s.cap, free: s.cap - s.H })).sort((a, b) => b.u - a.u);
+  if (!L.length) return `<div class="card">${emptyBox('konta', 'Brak danych o obłożeniu', 'Dodaj pracowników i wpisz ich godziny w zakładce „Pracownicy i godziny”.', '<button class="btn pri" type="button" data-act="plTab" data-t="god">Przejdź do godzin</button>')}</div>`;
+  const cap = L.reduce((a, s) => a + s.cap, 0), Hs = L.reduce((a, s) => a + s.H, 0), most = L[0], freest = L.slice().sort((a, b) => b.free - a.free)[0], freeH = L.reduce((a, s) => a + Math.max(0, s.free), 0);
+  const kp = `<div class="kpis k4">${kpi('Średnie obłożenie', pctTxt(Hs, cap), hTxt(Hs) + ' z ' + hTxt(cap), Hs > cap ? 'r' : '')}${kpi('Najbardziej obłożony', esc(most.e.imie), pctTxt(most.H, most.cap) + ' wymiaru', most.u > 1 ? 'r' : 'g')}${kpi('Najwięcej wolnych mocy', esc(freest.free > 0 ? freest.e.imie : '—'), freest.free > 0 ? hTxt(freest.free) + ' wolnych godzin' : 'brak wolnych godzin', freest.free > 0 ? 'a' : '')}${kpi('Wolne godziny razem', hTxt(freeH), 'koszt: ' + zl(c.O.WN) + ' (w kosztach ogólnych)')}</div>`;
+  const row = s => {
+    const pc = Math.round(s.u * 100), cls = s.u > 1 ? 'r' : s.u >= 0.85 ? 'g' : 'a', top = Object.entries(s.perW).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([wid, h]) => `${esc((W(wid) || {}).nazwa || '—')}: ${hTxt(h)}`).join(' · ');
+    return `<div class="pl-ob"><div class="pl-ob-h"><span><b>${esc(s.e.imie)}</b> <span class="meta">${esc(s.e.stanowisko || '')}</span></span><span><b>${pc}%</b> <span class="meta">${hTxt(s.H)} z ${hTxt(s.cap)} · ${s.free >= 0 ? 'wolne ' + hTxt(s.free) : 'nadgodziny ' + hTxt(-s.free)}</span></span></div>
+      <div class="pl-ob-t" role="img" aria-label="Obłożenie ${pc}%"><i class="${cls}" style="width:${Math.min(100, pc)}%"></i>${s.u > 1 ? `<i class="r over" style="width:${Math.min(30, pc - 100)}%"></i>` : ''}</div>${top ? `<div class="meta">${top}</div>` : ''}</div>`;
+  };
+  return kp + `<section class="card"><div class="ch"><h2>Obłożenie pracowników — ${esc(plOkres())}</h2><span class="meta">od najbardziej obłożonych</span></div>${L.map(row).join('')}
+    <p class="meta" style="margin:14px 0 0">Wymiar: 40 h tygodniowo (albo według etatu) × dni robocze w miesiącu, bez świąt. Zielony — 85–100% wymiaru, pomarańczowy — wolne moce, czerwony — nadgodziny.</p></section>`;
 }
 const monSel = (id, v) => `<select id="${id}">${MIESN.map((n, i) => `<option value="${i + 1}"${+v === i + 1 ? ' selected' : ''}>${n}</option>`).join('')}</select>`;
 const yearSel = (id, v, none) => { const cy = today().getFullYear(); let o = none ? `<option value="">—</option>` : ''; for (let y = cy - 8; y <= cy + 4; y++) o += `<option value="${y}"${+v === y ? ' selected' : ''}>${y}</option>`; return `<select id="${id}">${o}</select>`; };
-function plRatesRead() {
-  const d = S.dr; if (!d || !d.rates) return;
-  d.rates.forEach((r, i) => { const g = k => ($('#r' + i + '_' + k) || {}).value; if (g('m') == null) return; r.od = ymk(g('y'), g('m')); r.przychod = g('p'); r.ksiegowosc = g('k'); });
+const plNumIn = (id, v) => `<input id="${id}" type="text" inputmode="decimal" data-num="g" value="${esc(v === '' || v == null ? '' : grp(num(v) ?? parseNum(v), 2))}" autocomplete="off">`;
+function plRowsRead(pref, keys) {
+  const d = S.dr; if (!d || !d.rows) return;
+  d.rows.forEach((r, i) => { const g = k => ($('#' + pref + i + '_' + k) || {}).value; if (g('m') == null) return; r.od = ymk(g('y'), g('m')); keys.forEach(([k, f]) => { r[f] = g(k); }); });
   const ey = ($('#pl_ey') || {}).value, em = ($('#pl_em') || {}).value; if (ey !== undefined) d.koniec = ey ? ymk(ey, em || 12) : '';
 }
+const plRatesRead = () => { if (S.dr && S.dr.type === 'plW') plRowsRead('r', [['p', 'przychod'], ['k', 'stale']]); else if (S.dr && S.dr.type === 'plEmp') { plRowsRead('e', [['p', 'kwota'], ['h', 'etat']]); const n = $('#f_imie'), s = $('#f_stanowisko'); if (n) S.dr.imie = n.value; if (s) S.dr.stanowisko = s.value; } };
+const endSel = d => `<div class="eye" style="margin-top:6px">${d.type === 'plEmp' ? 'Koniec zatrudnienia' : 'Koniec obsługi'} (opcjonalnie)</div><div class="pl-rate" style="grid-template-columns:1.2fr .9fr"><label class="fld" for="pl_em"><span>Miesiąc</span>${monSel('pl_em', d.koniec ? +d.koniec.slice(5) : 12)}</label><label class="fld" for="pl_ey"><span>Rok (puste = nadal trwa)</span>${yearSel('pl_ey', d.koniec ? +d.koniec.slice(0, 4) : '', true)}</label></div>`;
 function drPlW() {
   const d = S.dr, w = W(d.id); if (!w) return drHead('', 'Wspólnota');
-  if (!d.rates) { d.rates = JSON.parse(JSON.stringify(PL.d.stawki[w.id] || [])).sort((a, b) => a.od.localeCompare(b.od)); d.koniec = PL.d.koniec[w.id] || ''; if (!d.rates.length) d.rates.push({ od: ymk(PL.y, 1), przychod: '', ksiegowosc: '' }); }
-  const c = plCalc(PL.y), r = c.rows.find(x => x.w.id === w.id) || { P: 0, K: 0, I: 0, M: 0 };
-  const rateRow = (x, i) => `<div class="pl-rate"><label class="fld" for="r${i}_m"><span>Od miesiąca</span>${monSel('r' + i + '_m', +x.od.slice(5))}</label><label class="fld" for="r${i}_y"><span>Rok</span>${yearSel('r' + i + '_y', +x.od.slice(0, 4))}</label><label class="fld" for="r${i}_p"><span>Opłata za obsługę / mies. (zł)</span><input id="r${i}_p" type="text" inputmode="decimal" data-num="g" value="${esc(x.przychod === '' || x.przychod == null ? '' : grp(num(x.przychod) ?? parseNum(x.przychod), 2))}" autocomplete="off"></label><label class="fld" for="r${i}_k"><span>Koszt księgowości / mies. (zł)</span><input id="r${i}_k" type="text" inputmode="decimal" data-num="g" value="${esc(x.ksiegowosc === '' || x.ksiegowosc == null ? '' : grp(num(x.ksiegowosc) ?? parseNum(x.ksiegowosc), 2))}" autocomplete="off"></label><button class="icb" type="button" data-act="plRateDel" data-i="${i}" aria-label="Usuń tę stawkę" title="Usuń"${d.rates.length < 2 ? ' disabled' : ''}>${ico('trash', 16)}</button></div>`;
+  if (!d.rows) { d.rows = JSON.parse(JSON.stringify(PL.d.stawki[w.id] || [])).sort((a, b) => a.od.localeCompare(b.od)); d.koniec = PL.d.koniec[w.id] || ''; if (!d.rows.length) d.rows.push({ od: ymk(PL.y, 1), przychod: '', stale: '' }); }
+  const r = plCalc(PL.y, plMonths()).rows.find(x => x.w.id === w.id) || { P: 0, S: 0, PW: 0, WY: 0, IN: 0, MB: 0 };
+  const row = (x, i) => `<div class="pl-rate"><label class="fld" for="r${i}_m"><span>Od miesiąca</span>${monSel('r' + i + '_m', +x.od.slice(5))}</label><label class="fld" for="r${i}_y"><span>Rok</span>${yearSel('r' + i + '_y', +x.od.slice(0, 4))}</label><label class="fld" for="r${i}_p"><span>Opłata za obsługę / mies. (zł)</span>${plNumIn('r' + i + '_p', x.przychod)}</label><label class="fld" for="r${i}_k"><span>Koszty stałe / mies. (zł)</span>${plNumIn('r' + i + '_k', x.stale)}</label><button class="icb" type="button" data-act="plRowDel" data-i="${i}" aria-label="Usuń tę stawkę" title="Usuń"${d.rows.length < 2 ? ' disabled' : ''}>${ico('trash', 16)}</button></div>`;
   const poz = PL.d.pozycje.filter(p => p.wid === w.id && p.data && p.data.slice(0, 4) === String(PL.y)).sort((a, b) => b.data.localeCompare(a.data));
-  return drHead('Wyniki finansowe (P&L)', w.nazwa || 'Wspólnota')
-    + `<div class="kpis k4" style="margin-bottom:16px">${kpi('Przychody', zl(r.P), String(PL.y))}${kpi('Księgowość', zl(r.K), '')}${kpi('Inne koszty', zl(r.I), '')}${kpi('Marża', zl(r.M), pctTxt(r.M, r.P), r.M < 0 ? 'r' : 'g')}</div>`
-    + `<form id="drForm" novalidate><div class="eye">Stawki miesięczne</div><p class="meta" style="margin:4px 0 0">Gdy opłata albo koszt się zmienia, dodaj nową stawkę „od miesiąca” — poprzednie miesiące liczą się po starej.</p><div id="plRates">${d.rates.map(rateRow).join('')}</div>
-      <div style="margin:10px 0 18px"><button class="btn sec" type="button" data-act="plRateAdd">${ico('plus', 14)}Dodaj zmianę stawki</button></div>
-      <div class="eye">Koniec obsługi (opcjonalnie)</div><div class="pl-rate" style="grid-template-columns:1.2fr .9fr"><label class="fld" for="pl_em"><span>Miesiąc</span>${monSel('pl_em', d.koniec ? +d.koniec.slice(5) : 12)}</label><label class="fld" for="pl_ey"><span>Rok (puste = nadal obsługujemy)</span>${yearSel('pl_ey', d.koniec ? +d.koniec.slice(0, 4) : '', true)}</label></div>
+  return drHead('Wyniki finansowe (P&L) · ' + plOkres(), w.nazwa || 'Wspólnota')
+    + `<div class="kpis k4" style="margin-bottom:16px">${kpi('Przychody', zl(r.P), '')}${kpi('Koszty bezpośrednie', zl(r.S + r.PW + r.WY + r.IN), 'stałe, podwykonawcy, wynagrodzenia, inne')}${kpi('Marża brutto', zl(r.MB), pctTxt(r.MB, r.P), r.MB < -0.5 ? 'r' : 'g')}${kpi('Wynagrodzenia', zl(r.WY), r.H ? hTxt(r.H) + ' pracy' : 'brak godzin')}</div>`
+    + `<form id="drForm" novalidate><div class="eye">Stawki miesięczne</div><p class="meta" style="margin:4px 0 0">Koszty stałe to stałe miesięczne koszty obsługi tej wspólnoty, np. księgowość, oprogramowanie, materiały. Gdy kwota się zmienia, dodaj nową stawkę „od miesiąca” — wcześniejsze miesiące liczą się po starej.</p>${d.rows.map(row).join('')}
+      <div style="margin:10px 0 18px"><button class="btn sec" type="button" data-act="plRowAdd">${ico('plus', 14)}Dodaj zmianę stawki</button></div>${endSel(d)}
       <div class="ch" style="margin:18px 0 4px"><h2>Koszty i przychody jednorazowe ${PL.y}</h2><button class="btn ghost" type="button" data-act="plPozNew" data-wid="${esc(w.id)}">${ico('plus', 13)} Dodaj</button></div>${poz.length ? poz.map(plPozRow).join('') : '<div class="none">Brak pozycji w tym roku.</div>'}`
     + foot('Zapisz stawki') + '</form>';
 }
+function drPlEmp() {
+  const d = S.dr, e = d.id ? PL.d.pracownicy.find(x => x.id === d.id) : null;
+  if (!d.rows) { d.rows = e ? JSON.parse(JSON.stringify(e.koszt || [])).sort((a, b) => a.od.localeCompare(b.od)) : []; d.koniec = e ? e.koniec || '' : ''; d.imie = e ? e.imie : ''; d.stanowisko = e ? e.stanowisko || '' : ''; if (!d.rows.length) d.rows.push({ od: ymk(PL.y, 1), kwota: '', etat: 40 }); }
+  const row = (x, i) => `<div class="pl-rate"><label class="fld" for="e${i}_m"><span>Od miesiąca</span>${monSel('e' + i + '_m', +x.od.slice(5))}</label><label class="fld" for="e${i}_y"><span>Rok</span>${yearSel('e' + i + '_y', +x.od.slice(0, 4))}</label><label class="fld" for="e${i}_p"><span>Koszt wynagrodzenia / mies. (zł)</span>${plNumIn('e' + i + '_p', x.kwota)}</label><label class="fld" for="e${i}_h"><span>Godzin tygodniowo</span><input id="e${i}_h" type="text" inputmode="decimal" value="${esc(x.etat ?? 40)}" autocomplete="off"></label><button class="icb" type="button" data-act="plRowDel" data-i="${i}" aria-label="Usuń tę zmianę" title="Usuń"${d.rows.length < 2 ? ' disabled' : ''}>${ico('trash', 16)}</button></div>`;
+  return drHead('Wyniki finansowe (P&L) · pracownicy', e ? e.imie : 'Nowy pracownik')
+    + `<form id="drForm" novalidate><div class="fg">${fieldHtml({ k: 'imie', l: 'Imię i nazwisko', req: 1, wide: 1 }, d.imie)}${fieldHtml({ k: 'stanowisko', l: 'Stanowisko', wide: 1, quick: PL_STAN }, d.stanowisko)}</div>
+      <div class="eye" style="margin-top:6px">Wynagrodzenie</div><p class="meta" style="margin:4px 0 0">Pełny miesięczny koszt pracodawcy (brutto z narzutami albo kwota faktury). Pełny etat = 40 godzin tygodniowo. Gdy wynagrodzenie się zmienia, dodaj zmianę „od miesiąca”.</p>${d.rows.map(row).join('')}
+      <div style="margin:10px 0 18px"><button class="btn sec" type="button" data-act="plRowAdd">${ico('plus', 14)}Dodaj zmianę wynagrodzenia</button></div>${endSel(d)}`
+    + foot(e ? 'Zapisz' : 'Dodaj pracownika', e ? `<button class="btn danger" type="button" data-act="plEmpDel">Usuń</button>` : '') + '</form>';
+}
 const plPozFields = () => [
-  { k:'typ', l:'Rodzaj', t:'chips', o:['Koszt', 'Przychód'], def:'Koszt', req:1, wide:1 },
-  { k:'wid', l:'Dotyczy', t:'select', wide:1, o:[['', 'Firma — koszt lub przychód ogólny'], ...sortedW().map(w => [w.id, w.nazwa || 'Bez nazwy'])] },
-  { k:'data', l:'Data', t:'date', req:1, def: () => iso(today()) },
-  { k:'kwota', l:'Kwota netto (zł)', t:'number', req:1 },
-  { k:'kat', l:'Kategoria', wide:1, quick:[...PL_KAT.koszt.slice(0, 5), ...PL_KAT.przychod.slice(0, 2)] },
-  { k:'opis', l:'Opis', t:'textarea', wide:1, rows:2, ph:'np. wymiana zamka w drzwiach wejściowych' }
+  { k: 'typ', l: 'Rodzaj', t: 'chips', o: ['Koszt podwykonawcy', 'Inny koszt', 'Przychód'], def: 'Koszt podwykonawcy', req: 1, wide: 1 },
+  { k: 'wid', l: 'Dotyczy', t: 'select', wide: 1, o: [['', 'Firma — koszt lub przychód ogólny'], ...sortedW().map(w => [w.id, w.nazwa || 'Bez nazwy'])], hint: 'Koszty przypisane do wspólnoty obniżają jej marżę brutto. „Firma — ogólne” trafia do kosztów ogólnych.' },
+  { k: 'kontrahent', l: 'Podwykonawca / kontrahent (opcjonalnie)', wide: 1, quick: [...S.C.kontrahenci.values()].map(x => x.nazwa).filter(Boolean).sort((a, b) => a.localeCompare(b, 'pl')).slice(0, 8) },
+  { k: 'data', l: 'Data', t: 'date', req: 1, def: () => iso(today()) },
+  { k: 'kwota', l: 'Kwota netto (zł)', t: 'number', req: 1 },
+  { k: 'kat', l: 'Kategoria', wide: 1, quick: PL_KAT },
+  { k: 'opis', l: 'Opis', t: 'textarea', wide: 1, rows: 2, ph: 'np. wynagrodzenie administratora za październik, umowa zlecenie' }
 ];
 function drPlPoz() {
   const d = S.dr, p = d.id ? PL.d.pozycje.find(x => x.id === d.id) : null;
-  const src = p ? Object.assign({}, p, { typ: p.typ === 'przychod' ? 'Przychód' : 'Koszt' }) : Object.assign({}, d.preset || {});
+  const src = p ? Object.assign({}, p, { typ: PL_TYP[p.typ] || 'Inny koszt' }) : Object.assign({}, d.preset || {});
   return drHead('Wyniki finansowe (P&L)', p ? 'Edytuj pozycję' : 'Nowy koszt lub przychód')
     + `<form id="drForm" novalidate><div class="fg">${plPozFields().map(f => fieldHtml(f, src[f.k])).join('')}</div>` + foot(p ? 'Zapisz' : 'Dodaj', p ? `<button class="btn danger" type="button" data-act="plPozDel">Usuń</button>` : '') + '</form>';
 }
 async function submitPlW(d) {
-  plRatesRead();
-  const fe = t => toast(t);
-  const out = [];
-  for (const r of d.rates) {
-    const p = parseNum(r.przychod), k = r.ksiegowosc === '' || r.ksiegowosc == null ? 0 : parseNum(r.ksiegowosc);
-    if (p == null || isNaN(p)) { fe('Wpisz opłatę za obsługę w każdej stawce'); return; }
-    if (isNaN(k)) { fe('Koszt księgowości musi być liczbą'); return; }
-    if (out.some(x => x.od === r.od)) { fe('Dwie stawki zaczynają się w tym samym miesiącu'); return; }
-    out.push({ od: r.od, przychod: p, ksiegowosc: k });
+  plRatesRead(); const out = [];
+  for (const r of d.rows) {
+    const p = parseNum(r.przychod), k = r.stale === '' || r.stale == null ? 0 : parseNum(r.stale);
+    if (p == null || isNaN(p)) { toast('Wpisz opłatę za obsługę w każdej stawce'); return; }
+    if (isNaN(k)) { toast('Koszty stałe muszą być liczbą'); return; }
+    if (out.some(x => x.od === r.od)) { toast('Dwie stawki zaczynają się w tym samym miesiącu'); return; }
+    out.push({ od: r.od, przychod: p, stale: k });
   }
   PL.d.stawki[d.id] = out.sort((a, b) => a.od.localeCompare(b.od));
   if (d.koniec) PL.d.koniec[d.id] = d.koniec; else delete PL.d.koniec[d.id];
   if (await plSave()) { closeDrawer(); toast('Zapisano stawki'); }
 }
+async function submitPlEmp(d) {
+  plRatesRead();
+  if (!String(d.imie || '').trim()) { const e = $('#e_f_imie'); if (e) { e.textContent = 'Wpisz imię i nazwisko'; e.hidden = false; } $('#f_imie').focus(); return; }
+  const out = [];
+  for (const r of d.rows) {
+    const k = parseNum(r.kwota), h = r.etat === '' || r.etat == null ? 40 : parseNum(r.etat);
+    if (k == null || isNaN(k)) { toast('Wpisz koszt wynagrodzenia w każdym wierszu'); return; }
+    if (isNaN(h) || h <= 0 || h > 80) { toast('Godziny tygodniowo: liczba od 1 do 80 (pełny etat = 40)'); return; }
+    if (out.some(x => x.od === r.od)) { toast('Dwie zmiany zaczynają się w tym samym miesiącu'); return; }
+    out.push({ od: r.od, kwota: k, etat: h });
+  }
+  const rec = Object.assign({}, d.id ? PL.d.pracownicy.find(x => x.id === d.id) : { id: newId() }, { imie: d.imie.trim(), stanowisko: String(d.stanowisko || '').trim(), koszt: out.sort((a, b) => a.od.localeCompare(b.od)), koniec: d.koniec || '' });
+  PL.d.pracownicy = d.id ? PL.d.pracownicy.map(x => x.id === d.id ? rec : x) : [...PL.d.pracownicy, rec];
+  if (await plSave()) { closeDrawer(); toast(d.id ? 'Zapisano pracownika' : 'Dodano pracownika — wpisz jego godziny'); }
+}
 async function submitPlPoz(d) {
   const data = readFields(plPozFields(), 'f_'); if (!data) return;
   const kw = num(data.kwota); if (!(kw > 0)) { const e = $('#e_f_kwota'); if (e) { e.textContent = 'Wpisz kwotę większą od zera'; e.hidden = false; } return; }
-  const rec = { id: d.id || newId(), typ: data.typ === 'Przychód' ? 'przychod' : 'koszt', wid: data.wid || '', data: data.data, kwota: kw, kat: data.kat, opis: data.opis };
+  const typ = Object.keys(PL_TYP).find(k => PL_TYP[k] === data.typ) || 'inny';
+  const rec = { id: d.id || newId(), typ, wid: data.wid || '', data: data.data, kwota: kw, kontrahent: data.kontrahent, kat: data.kat, opis: data.opis };
   PL.d.pozycje = d.id ? PL.d.pozycje.map(x => x.id === d.id ? rec : x) : [...PL.d.pozycje, rec];
   if (!(await plSave())) return;
   toast(d.id ? 'Zapisano pozycję' : 'Dodano pozycję');
-  if (S.drStack.length) { const prev = S.drStack[S.drStack.length - 1]; if (prev && prev.spec && prev.spec.type === 'plW') { popDrawer(); return; } }
+  if (S.drStack.length) { popDrawer(); return; }
   closeDrawer();
 }
 function plCsv() {
-  const y = PL.y, c = plCalc(y), q = v => '"' + String(v ?? '').replace(/"/g, '""') + '"', n = v => String(Math.round(v * 100) / 100).replace('.', ',');
-  const L = [['Wspólnota', 'Przychody', 'w tym jednorazowe', 'Koszty księgowe', 'Koszty inne', 'Marża', 'Marża %'].map(q).join(';')];
-  c.rows.forEach(r => L.push([q(r.w.nazwa), n(r.P), n(r.X), n(r.K), n(r.I), n(r.M), r.P ? n(r.M / r.P * 100) : ''].join(';')));
-  if (c.firm.P || c.firm.I) L.push([q('Firma — ogólne'), n(c.firm.P), n(c.firm.X), '0', n(c.firm.I), n(c.firm.M), ''].join(';'));
-  L.push([q('Razem spółka'), n(c.tot.P), n(c.tot.X), n(c.tot.K), n(c.tot.I), n(c.tot.M), c.tot.P ? n(c.tot.M / c.tot.P * 100) : ''].join(';'));
-  L.push(''); L.push([q('Miesiąc'), q('Przychody'), q('Koszty')].join(';'));
-  c.mon.forEach((m, i) => L.push([q(MIESN[i] + ' ' + y), n(m.P), n(m.C)].join(';')));
+  const y = PL.y, c = plCalc(y, plMonths()), q = v => '"' + String(v ?? '').replace(/"/g, '""') + '"', n = v => String(Math.round(v * 100) / 100).replace('.', ',');
+  const L = [q('Zarządca — wyniki finansowe: ' + plOkres()), '', ['Wspólnota', 'Przychody', 'w tym jednorazowe', 'Koszty stałe', 'Podwykonawcy', 'Wynagrodzenia (wg godzin)', 'Godziny', 'Inne koszty', 'Marża brutto', 'Marża %'].map(q).join(';')];
+  c.rows.forEach(r => L.push([q(r.w.nazwa), n(r.P), n(r.X), n(r.S), n(r.PW), n(r.WY), n(r.H), n(r.IN), n(r.MB), r.P ? n(r.MB / r.P * 100) : ''].join(';')));
+  const t = c.T; L.push([q('Razem wspólnoty'), n(t.P), n(t.X), n(t.S), n(t.PW), n(t.WY), n(t.H), n(t.IN), n(t.MB), t.P ? n(t.MB / t.P * 100) : ''].join(';'));
+  L.push(''); L.push(q('Koszty ogólne'));
+  L.push([q('Wynagrodzenia nieprzypisane do wspólnot'), n(c.O.WN)].join(';'));
+  c.emps.filter(s => s.WN > 0.5).forEach(s => L.push([q('  ' + s.e.imie + ' (' + n(Math.max(0, s.cap - s.H)) + ' h nieprzypisanych)'), n(s.WN)].join(';')));
+  L.push([q('Podwykonawcy — ogólne'), n(c.O.PW)].join(';')); L.push([q('Inne koszty ogólne'), n(c.O.IN)].join(';')); L.push([q('Razem koszty ogólne'), n(c.O.T)].join(';'));
+  L.push(''); L.push([q('Marża brutto'), n(t.MB)].join(';')); L.push([q('Koszty ogólne'), n(-c.O.T)].join(';')); if (c.O.PO) L.push([q('Przychody pozostałe'), n(c.O.PO)].join(';')); L.push([q('Wynik spółki'), n(c.wynik)].join(';'));
+  L.push(''); L.push(['Pracownik', 'Godziny przypisane', 'Wymiar', 'Obłożenie %', 'Koszt', 'w tym w kosztach ogólnych'].map(q).join(';'));
+  c.emps.forEach(s => L.push([q(s.e.imie), n(s.H), n(s.cap), s.cap ? n(s.H / s.cap * 100) : '', n(s.cost), n(s.WN)].join(';')));
+  L.push(''); L.push(['Miesiąc ' + y, 'Przychody', 'Koszty', 'Marża brutto', 'Wynik'].map(q).join(';'));
+  for (let m = 1; m <= 12; m++) { const x = plCalc(y, [m]); L.push([q(MIESN[m - 1]), n(x.przych), n(x.T.K + x.O.T), n(x.T.MB), n(x.wynik)].join(';')); }
   const u = URL.createObjectURL(new Blob(['﻿' + L.join('\r\n')], { type: 'text/csv;charset=utf-8' })), a = document.createElement('a');
-  a.href = u; a.download = `Zarzadca-P&L-${y}.csv`; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 3000);
-}
-async function plDirSet(p) {
-  if (!p) return;
-  try { await T.inv('cfg_set_pnl', { path: p }); } catch (e) { toast(String(e)); return; }
-  PL.ready = false; render(); toast('Dane finansowe zapisują się w: ' + p);
+  a.href = u; a.download = `Zarzadca-P&L-${y}-${PL.z === 'm' ? String(PL.m).padStart(2, '0') : 'YTD-' + String(PL.m).padStart(2, '0')}.csv`; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 3000);
 }
 
 /* ---------- wersja na komputer (Tauri, v0.16): folder danych, praca kilku osób, aktualizacje ---------- */
@@ -4305,6 +4513,7 @@ async function submitDrawer() {
   if (d.type === 'haslo') return submitHaslo();
   if (d.type === 'plW') return submitPlW(d);
   if (d.type === 'plPoz') return submitPlPoz(d);
+  if (d.type === 'plEmp') return submitPlEmp(d);
   if (d.type === 'w') {
     const x = d.id ? W(d.id) : null, data = readFields(x ? W_ID : W_NEW, 'f_'); if (!data) return;
     const id = x ? x.id : newId();
@@ -4419,7 +4628,7 @@ async function pageLeave() {
   const r = await askLeave();
   if (r === 'no') return false;
   if (r === 'alt') { S.dirty = false; S.dirtyForm = null; return true; }
-  const fn = { formTech: saveTech, formFirma: saveFirma, kForm: saveKPanel, cForm: saveCPanel }[S.dirtyForm];
+  const fn = { formTech: saveTech, formFirma: saveFirma, kForm: saveKPanel, cForm: saveCPanel, plHours: savePlHours }[S.dirtyForm];
   if (fn) await fn(); else S.dirty = false;
   return !S.dirty;
 }
@@ -4832,12 +5041,36 @@ document.addEventListener('click', async e => {
       if ((await ask({ title: 'Usunąć konto „' + a.imie + '”?', text: 'Ta osoba nie zaloguje się już do aplikacji. Dane, które wprowadziła, zostają.', ok: 'Usuń konto', danger: true })) !== 'yes') break;
       try { await saveKonta(konta().filter(k => k.id !== a.id)); closeDrawer(); toast('Usunięto konto'); } catch (err) {} break;
     }
-    case 'plY': PL.y += +t.dataset.d; render(); break;
-    case 'plZ': PL.z = t.dataset.t === 'rok' ? 'rok' : 'ytd'; render(); break;
+    case 'plY': case 'plM': case 'plTab': case 'plZ': case 'plMSel': {
+      if (S.dirty && S.dirtyForm === 'plHours' && !(await pageLeave())) break;
+      const k = t.dataset.act;
+      if (k === 'plY') PL.y += +t.dataset.d;
+      else if (k === 'plM') { let m = PL.m + +t.dataset.d; if (m < 1) { m = 12; PL.y--; } if (m > 12) { m = 1; PL.y++; } PL.m = m; }
+      else if (k === 'plTab') PL.tab = t.dataset.t;
+      else if (k === 'plZ') PL.z = t.dataset.t === 'ytd' ? 'ytd' : 'm';
+      else PL.m = +t.dataset.m;
+      render(); break;
+    }
     case 'plW': openDrawer({ type: 'plW', id: t.dataset.id }); break;
-    case 'plRateAdd': { plRatesRead(); const L = S.dr.rates, last = L[L.length - 1], ny = last ? +last.od.slice(0, 4) + 1 : PL.y; L.push({ od: ymk(ny, 1), przychod: last ? last.przychod : '', ksiegowosc: last ? last.ksiegowosc : '' }); renderDrawer(''); S.drDirty = true; break; }
-    case 'plRateDel': { plRatesRead(); S.dr.rates.splice(+t.dataset.i, 1); renderDrawer(''); S.drDirty = true; break; }
-    case 'plPozNew': { const spec = { type: 'plPoz', preset: t.dataset.wid ? { wid: t.dataset.wid } : {} }; if (S.dr && S.dr.type === 'plW') { plRatesRead(); pushDrawer(spec); } else openDrawer(spec); break; }
+    case 'plEmpNew': openDrawer({ type: 'plEmp' }); break;
+    case 'plEmp': openDrawer({ type: 'plEmp', id: t.dataset.id }); break;
+    case 'plEmpDel': {
+      if ((await ask({ title: 'Usunąć pracownika?', text: 'Zniknie z wyników finansowych razem z wpisanymi godzinami. Tej operacji nie można cofnąć.', ok: 'Usuń', danger: true })) !== 'yes') break;
+      const id = S.dr.id; PL.d.pracownicy = PL.d.pracownicy.filter(x => x.id !== id); for (const g of Object.values(PL.d.godziny)) delete g[id];
+      if (await plSave()) { S.drDirty = false; closeDrawer(); toast('Usunięto pracownika'); } break;
+    }
+    case 'plRowAdd': { plRatesRead(); const L = S.dr.rows, last = L[L.length - 1], ny = last ? +last.od.slice(0, 4) + 1 : PL.y; L.push(Object.assign({}, last || {}, { od: ymk(ny, 1) })); renderDrawer(''); S.drDirty = true; break; }
+    case 'plRowDel': { plRatesRead(); S.dr.rows.splice(+t.dataset.i, 1); renderDrawer(''); S.drDirty = true; break; }
+    case 'plHCopy': {
+      const pm = PL.m === 1 ? ymk(PL.y - 1, 12) : ymk(PL.y, PL.m - 1), G = PL.d.godziny[pm] || {};
+      if (!Object.keys(G).length) { toast('W poprzednim miesiącu nie ma wpisanych godzin'); break; }
+      for (const i of $$('#plHours .plh')) { const v = (G[i.dataset.e] || {})[i.dataset.w]; i.value = v ? String(v).replace('.', ',') : ''; }
+      S.dirty = true; S.dirtyForm = 'plHours'; plHoursFoot(); toast('Skopiowano godziny — sprawdź i zapisz'); break;
+    }
+    case 'sumRep': S.przTab = 'bud'; S.przRep = true; if (await go('przeglady')) setTimeout(() => { const b = $('#repBox'); if (b) b.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }, 60); break;
+    case 'sumQ': S.oq = t.dataset.id; S.otab = 'list'; go('oferty'); break;
+    case 'sumOfPdf': S.oq = t.dataset.id; makeOffersPdf(t); break;
+    case 'plPozNew': { const spec = { type: 'plPoz', preset: t.dataset.wid ? { wid: t.dataset.wid, typ: 'Koszt podwykonawcy' } : {} }; if (S.dr && S.dr.type === 'plW') { plRatesRead(); pushDrawer(spec); } else openDrawer(spec); break; }
     case 'plPoz': { if (S.dr && S.dr.type === 'plW') { plRatesRead(); pushDrawer({ type: 'plPoz', id: t.dataset.id }); } else openDrawer({ type: 'plPoz', id: t.dataset.id }); break; }
     case 'plPozDel': {
       if ((await ask({ title: 'Usunąć tę pozycję?', text: 'Zniknie z wyników finansowych. Tej operacji nie można cofnąć.', ok: 'Usuń', danger: true })) !== 'yes') break;
@@ -4946,6 +5179,7 @@ document.addEventListener('submit', e => {
   else if (e.target.id === 'formFirma') saveFirma();
   else if (e.target.id === 'kForm') saveKPanel();
   else if (e.target.id === 'cForm') saveCPanel();
+  else if (e.target.id === 'plHours') savePlHours();
 });
 document.addEventListener('input', e => {
   const id = e.target.id;
@@ -4961,8 +5195,12 @@ document.addEventListener('input', e => {
     if (id === 'f_tresc') { S.dr.edited = true; $('#regenBtn').hidden = false; updateInfo(); return; }
     if (id === 'f_temat' && !S.dr.edited) { regen(); return; }
   }
+  if (e.target.classList && e.target.classList.contains('plh')) plHoursFoot();
   { const fm = e.target.closest('.wform'); if (fm) { S.dirty = true; S.dirtyForm = fm.id; } }
 });
+document.addEventListener('mouseover', e => { const g = e.target.closest && e.target.closest('.plm'); if (g) plTip(g); else if (e.target.closest && !e.target.closest('#plChart')) { const t = $('#plTip'); if (t && !t.hidden) t.hidden = true; } });
+document.addEventListener('focusout', e => { if (e.target.classList && e.target.classList.contains('plm')) plTip(null); });
+document.addEventListener('focusin', e => { if (e.target.classList && e.target.classList.contains('plm')) plTip(e.target); });
 document.addEventListener('focusin', e => { if (e.target.id === 'f_kq') renderCombo(true); if (e.target.id === 'gsIn' && !GS.open) gsShow(); });
 document.addEventListener('change', e => {
   const n = e.target.name, v = e.target.value;
