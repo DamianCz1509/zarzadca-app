@@ -23,6 +23,9 @@ use tauri_plugin_updater::UpdaterExt;
 struct Cfg {
     root: Option<String>,
     user: Option<String>,
+    /// prywatny folder właściciela na wyniki finansowe (P&L) — poza wspólnym folderem danych
+    #[serde(default)]
+    pnl: Option<String>,
 }
 
 struct AppState {
@@ -121,18 +124,78 @@ struct CfgOut {
     suggest: String,
     machine: String,
     version: String,
+    pnl: Option<String>,
+    pnl_suggest: String,
 }
 
 #[tauri::command]
 fn cfg_get(app: AppHandle, st: State<'_, AppState>) -> CfgOut {
     let c = st.cfg.lock().unwrap().clone();
     CfgOut {
-        root: c.root,
+        root: c.root.clone(),
         user: c.user,
         suggest: suggest_root(&app),
         machine: machine_name(),
         version: app.package_info().version.to_string(),
+        pnl_suggest: c
+            .root
+            .as_ref()
+            .and_then(|r| Path::new(r).parent().map(|p| p.join("Zarządca-finanse").to_string_lossy().into_owned()))
+            .or_else(|| app.path().document_dir().ok().map(|d| d.join("Zarządca-finanse").to_string_lossy().into_owned()))
+            .unwrap_or_default(),
+        pnl: c.pnl,
     }
+}
+
+/* ---------- prywatne dane finansowe właściciela (P&L) ---------- */
+
+const PNL_FILE: &str = "finanse.zarzadca.json";
+
+fn pnl_dir(st: &State<'_, AppState>) -> Res<PathBuf> {
+    st.cfg.lock().unwrap().pnl.clone().map(PathBuf::from).ok_or_else(|| "nie wybrano folderu na dane finansowe".into())
+}
+
+/// Folder P&L nie może leżeć we wspólnym folderze danych (widzą go współpracownicy).
+#[tauri::command]
+fn cfg_set_pnl(app: AppHandle, st: State<'_, AppState>, path: String) -> Res<()> {
+    let p = PathBuf::from(&path);
+    fs::create_dir_all(&p).map_err(|e| format!("nie można utworzyć folderu: {e}"))?;
+    let mut c = st.cfg.lock().unwrap();
+    if let Some(root) = c.root.clone() {
+        let (pc, rc) = (fs::canonicalize(&p).map_err(es)?, fs::canonicalize(&root).map_err(es)?);
+        if pc.starts_with(&rc) {
+            return Err("Ten folder leży we wspólnym folderze danych, który widzą współpracownicy — wybierz inny, prywatny folder.".into());
+        }
+    }
+    let probe = p.join(".zarzadca-test");
+    fs::write(&probe, b"ok").map_err(|e| format!("brak prawa zapisu w folderze: {e}"))?;
+    let _ = fs::remove_file(probe);
+    c.pnl = Some(path);
+    save_cfg(&app, &c)
+}
+
+#[tauri::command]
+fn pnl_read(st: State<'_, AppState>) -> Res<Option<String>> {
+    match fs::read_to_string(pnl_dir(&st)?.join(PNL_FILE)) {
+        Ok(t) => Ok(Some(t)),
+        Err(e) if e.kind() == ErrorKind::NotFound => Ok(None),
+        Err(e) => Err(es(e)),
+    }
+}
+
+/// Zapis danych finansowych + kopia z danego dnia w podfolderze „kopie”.
+#[tauri::command]
+fn pnl_write(st: State<'_, AppState>, text: String, day: String) -> Res<()> {
+    let dir = pnl_dir(&st)?;
+    write_atomic(&dir.join(PNL_FILE), text.as_bytes())?;
+    let valid_day = day.len() == 10 && day.chars().enumerate().all(|(i, ch)| if i == 4 || i == 7 { ch == '-' } else { ch.is_ascii_digit() });
+    if valid_day {
+        let bk = dir.join("kopie").join(format!("finanse-{day}.json"));
+        if !bk.exists() {
+            let _ = write_atomic(&bk, text.as_bytes());
+        }
+    }
+    Ok(())
 }
 
 #[tauri::command]
@@ -436,7 +499,7 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
             cfg_get, cfg_set, probe, pick_folder, f_read, f_read_text, f_write, f_write_text, f_stat, f_list, f_mkdir, f_remove,
-            f_rename, f_copy, reveal, upd_check, upd_install
+            f_rename, f_copy, reveal, upd_check, upd_install, cfg_set_pnl, pnl_read, pnl_write
         ])
         .run(tauri::generate_context!())
         .expect("nie udało się uruchomić aplikacji Zarządca");
