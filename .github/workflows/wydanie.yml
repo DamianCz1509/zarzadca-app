@@ -1,16 +1,16 @@
+# Buduje instalatory Windows (.exe) i macOS (.dmg, Intel + Apple Silicon) i publikuje je jako wydanie (Release)
+# z plikiem latest.json dla automatycznych aktualizacji.
+# Uruchamianie: GitHub → zakładka Actions → „Wydanie aplikacji” → Run workflow → wpisz numer wersji.
 name: Wydanie aplikacji
 
-# Buduje instalatory Windows (.exe) i Mac (.dmg) i publikuje je w zakładce Releases
-# razem z plikiem latest.json, z którego aplikacja pobiera aktualizacje.
 on:
   workflow_dispatch:
     inputs:
       wersja:
-        description: "Numer wersji, np. 0.16.0 (każda kolejna musi być wyższa)"
+        description: "Numer nowej wersji, np. 0.16.0 (zawsze wyższy niż poprzedni)"
         required: true
-        default: "0.16.0"
       opis:
-        description: "Co nowego (zobaczą to użytkownicy)"
+        description: "Co nowego — zobaczą to użytkownicy w oknie aktualizacji"
         required: false
         default: "Poprawki i ulepszenia"
 
@@ -21,7 +21,7 @@ jobs:
   build:
     strategy:
       fail-fast: false
-      max-parallel: 1
+      max-parallel: 1 # po kolei, żeby oba systemy dopisały się do tego samego latest.json
       matrix:
         include:
           - platform: windows-latest
@@ -30,84 +30,49 @@ jobs:
             args: "--target universal-apple-darwin --bundles app,dmg"
     runs-on: ${{ matrix.platform }}
     steps:
-      - name: Pobranie plików
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Sprawdzenie plików i kluczy
-        id: proj
-        shell: bash
-        env:
-          KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          PASS: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-          VER: ${{ inputs.wersja }}
-          REL_REPO: ${{ vars.RELEASES_REPO }}
-          REL_TOKEN: ${{ secrets.RELEASES_TOKEN }}
-        run: |
-          CONF=$(find . -path '*/src-tauri/tauri.conf.json' -not -path '*/node_modules/*' | head -1)
-          if [ -z "$CONF" ]; then
-            echo "::error::BRAK PLIKÓW APLIKACJI. Wgraj zawartość folderu 'pliki-do-github' (krok 3 instrukcji)."
-            exit 1
-          fi
-          DIR=$(dirname "$(dirname "$CONF")")
-          for f in package.json app/zarzadca.html scripts/build-web.mjs src-tauri/Cargo.toml src-tauri/src/lib.rs; do
-            if [ ! -f "$DIR/$f" ]; then echo "::error::BRAKUJE PLIKU: $f — wgraj go ponownie (krok 3 instrukcji)."; exit 1; fi
-          done
-          if [ -z "$KEY" ]; then echo "::error::BRAK SEKRETU TAURI_SIGNING_PRIVATE_KEY (krok 6 instrukcji)."; exit 1; fi
-          if [ -z "$PASS" ]; then echo "::error::BRAK SEKRETU TAURI_SIGNING_PRIVATE_KEY_PASSWORD (krok 6 instrukcji)."; exit 1; fi
-          if ! echo "$VER" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then echo "::error::ZŁY NUMER WERSJI: '$VER'. Wpisz np. 0.16.0"; exit 1; fi
-          # kod prywatny + osobne publiczne repozytorium tylko z wydaniami (zmienna RELEASES_REPO, np. login/zarzadca-app)
-          if [ -n "$REL_REPO" ]; then
-            if [ -z "$REL_TOKEN" ]; then echo "::error::BRAK SEKRETU RELEASES_TOKEN — potrzebny do publikacji w $REL_REPO."; exit 1; fi
-            DEST="$REL_REPO"; COMMITISH="main"
-          else
-            DEST="$GITHUB_REPOSITORY"; COMMITISH="$GITHUB_SHA"
-          fi
-          echo "dest=$DEST" >> "$GITHUB_OUTPUT"
-          echo "owner=${DEST%%/*}" >> "$GITHUB_OUTPUT"
-          echo "name=${DEST##*/}" >> "$GITHUB_OUTPUT"
-          echo "commitish=$COMMITISH" >> "$GITHUB_OUTPUT"
-          echo "Wydanie trafi do: $DEST"
-          echo "dir=$DIR" >> "$GITHUB_OUTPUT"
-          echo "Pliki aplikacji w folderze: $DIR — wszystko na miejscu."
-
-      - name: Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
 
-      - name: Rust
-        uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
-      - name: Pamięć podręczna Rust
-        uses: swatinem/rust-cache@v2
+      - uses: swatinem/rust-cache@v2
         with:
-          workspaces: "${{ steps.proj.outputs.dir }}/src-tauri -> target"
+          workspaces: "./src-tauri -> target"
 
       - name: Instalacja bibliotek
+        run: npm ci
+
+      - name: Gdzie publikować wydania
+        id: dest
         shell: bash
-        working-directory: ${{ steps.proj.outputs.dir }}
         run: |
-          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+          REPO="${{ vars.RELEASES_REPO }}"
+          if [ -z "$REPO" ]; then REPO="${{ github.repository }}"; fi
+          echo "repo=$REPO" >> "$GITHUB_OUTPUT"
+          echo "owner=${REPO%%/*}" >> "$GITHUB_OUTPUT"
+          echo "name=${REPO##*/}" >> "$GITHUB_OUTPUT"
 
       - name: Numer wersji i adres aktualizacji
         shell: bash
-        working-directory: ${{ steps.proj.outputs.dir }}
-        run: node scripts/set-version.mjs "${{ inputs.wersja }}" "${{ steps.proj.outputs.dest }}"
+        run: node scripts/set-version.mjs "${{ inputs.wersja }}" "${{ steps.dest.outputs.repo }}"
 
-      - name: Budowa instalatora i publikacja w Releases
+      - name: Budowa instalatora i publikacja
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN || secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
-          projectPath: ${{ steps.proj.outputs.dir }}
-          owner: ${{ steps.proj.outputs.owner }}
-          repo: ${{ steps.proj.outputs.name }}
-          releaseCommitish: ${{ steps.proj.outputs.commitish }}
+          owner: ${{ steps.dest.outputs.owner }}
+          repo: ${{ steps.dest.outputs.name }}
           tagName: v${{ inputs.wersja }}
+          releaseCommitish: ${{ vars.RELEASES_REPO != '' && 'main' || github.sha }}
           releaseName: "Zarządca ${{ inputs.wersja }}"
           releaseBody: ${{ inputs.opis }}
           releaseDraft: false
