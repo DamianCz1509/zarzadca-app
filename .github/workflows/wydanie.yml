@@ -40,6 +40,8 @@ jobs:
           KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           PASS: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
           VER: ${{ inputs.wersja }}
+          REL_REPO: ${{ vars.RELEASES_REPO }}
+          REL_TOKEN: ${{ secrets.RELEASES_TOKEN }}
         run: |
           CONF=$(find . -path '*/src-tauri/tauri.conf.json' -not -path '*/node_modules/*' | head -1)
           if [ -z "$CONF" ]; then
@@ -53,6 +55,18 @@ jobs:
           if [ -z "$KEY" ]; then echo "::error::BRAK SEKRETU TAURI_SIGNING_PRIVATE_KEY (krok 6 instrukcji)."; exit 1; fi
           if [ -z "$PASS" ]; then echo "::error::BRAK SEKRETU TAURI_SIGNING_PRIVATE_KEY_PASSWORD (krok 6 instrukcji)."; exit 1; fi
           if ! echo "$VER" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then echo "::error::ZŁY NUMER WERSJI: '$VER'. Wpisz np. 0.16.0"; exit 1; fi
+          # kod prywatny + osobne publiczne repozytorium tylko z wydaniami (zmienna RELEASES_REPO, np. login/zarzadca-app)
+          if [ -n "$REL_REPO" ]; then
+            if [ -z "$REL_TOKEN" ]; then echo "::error::BRAK SEKRETU RELEASES_TOKEN — potrzebny do publikacji w $REL_REPO."; exit 1; fi
+            DEST="$REL_REPO"; COMMITISH="main"
+          else
+            DEST="$GITHUB_REPOSITORY"; COMMITISH="$GITHUB_SHA"
+          fi
+          echo "dest=$DEST" >> "$GITHUB_OUTPUT"
+          echo "owner=${DEST%%/*}" >> "$GITHUB_OUTPUT"
+          echo "name=${DEST##*/}" >> "$GITHUB_OUTPUT"
+          echo "commitish=$COMMITISH" >> "$GITHUB_OUTPUT"
+          echo "Wydanie trafi do: $DEST"
           echo "dir=$DIR" >> "$GITHUB_OUTPUT"
           echo "Pliki aplikacji w folderze: $DIR — wszystko na miejscu."
 
@@ -80,16 +94,19 @@ jobs:
       - name: Numer wersji i adres aktualizacji
         shell: bash
         working-directory: ${{ steps.proj.outputs.dir }}
-        run: node scripts/set-version.mjs "${{ inputs.wersja }}" "${{ github.repository }}"
+        run: node scripts/set-version.mjs "${{ inputs.wersja }}" "${{ steps.proj.outputs.dest }}"
 
       - name: Budowa instalatora i publikacja w Releases
         uses: tauri-apps/tauri-action@v0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN || secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           projectPath: ${{ steps.proj.outputs.dir }}
+          owner: ${{ steps.proj.outputs.owner }}
+          repo: ${{ steps.proj.outputs.name }}
+          releaseCommitish: ${{ steps.proj.outputs.commitish }}
           tagName: v${{ inputs.wersja }}
           releaseName: "Zarządca ${{ inputs.wersja }}"
           releaseBody: ${{ inputs.opis }}
