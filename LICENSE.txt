@@ -1,0 +1,15 @@
+Zarządca — aplikacja dla zarządców nieruchomości
+Copyright (c) 2026 Damian Czupryński. Wszelkie prawa zastrzeżone.
+
+Kod źródłowy jest udostępniony publicznie wyłącznie do wglądu.
+Bez pisemnej zgody autora zabronione jest kopiowanie, modyfikowanie, rozpowszechnianie,
+sprzedaż oraz wykorzystywanie tego kodu lub jego części w innych produktach.
+
+Instalatory publikowane w zakładce Releases mogą być używane wyłącznie przez osoby
+i firmy, którym autor udzielił na to zgody.
+
+---
+
+All rights reserved. The source code is publicly visible for reference only.
+No permission is granted to copy, modify, distribute, sell or use this code or any part
+of it without the author's prior written consent.
